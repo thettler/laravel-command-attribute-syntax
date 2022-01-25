@@ -6,15 +6,14 @@ use Thettler\LaravelCommandAttributeSyntax\Attributes\CommandAttribute;
 use Thettler\LaravelCommandAttributeSyntax\Command;
 
 #[CommandAttribute(
-    name: 'test:basic',
-    description: 'Basic Command description!',
-    help: 'Some Help.',
+    name: 'test:hidden',
+    hidden: true
 )]
-class BasicCommand extends Command
+class BasicHiddenCommand extends Command
 {
     public function handle()
     {
-        $this->line('Works!');
+        $this->line('Is Hidden: ' . ($this->isHidden() ? 'Yes' : 'No'));
         return 1;
     }
 }

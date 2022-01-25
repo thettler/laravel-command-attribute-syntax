@@ -11,13 +11,29 @@ use Thettler\LaravelCommandAttributeSyntax\Command;
 )]
 class WithArgumentsCommand extends Command
 {
-    #[Argument(optional: true)]
-    protected string $optionalArgument;
+    #[Argument]
+    protected string $requiredArgument;
+
+    #[Argument]
+    protected ?string $optionalArgument;
+
+    #[Argument]
+    protected string $defaultArgument = 'default';
 
     public function handle()
     {
-        $this->line('Works!');
-        $this->line($this->optionalArgument);
+        $this->line('with argument().');
+
+        $this->table(
+            ['(requiredArgument)', '(optionalArgument)', '(defaultArgument)'],
+            [[$this->argument('requiredArgument'), $this->argument('optionalArgument'), $this->argument('defaultArgument')]],
+        );
+
+        $this->line('with attributes.');
+        $this->table(
+            ['->requiredArgument', '->optionalArgument', '->defaultArgument'],
+            [[$this->requiredArgument, $this->optionalArgument, $this->defaultArgument]],
+        );
 
         return 1;
     }
