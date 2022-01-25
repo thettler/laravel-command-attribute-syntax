@@ -6,7 +6,7 @@
         "laravel",
         "attributes"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/thettler/laravel-command-attribute-syntax",
     "license": "MIT",
     "authors": [
         {
@@ -35,13 +35,13 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories"
+            "Thettler\\LaravelCommandAttributeSyntax\\": "src",
+            "Thettler\\LaravelCommandAttributeSyntax\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "Thettler\\LaravelCommandAttributeSyntax\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -50,15 +50,19 @@
         "test-coverage": "vendor/bin/pest coverage"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true,
+            "pestphp/pest-plugin": true
+        }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Thettler\\LaravelCommandAttributeSyntax\\LaravelCommandAttributeSyntaxServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "LaravelCommandAttributeSyntax": "Thettler\\LaravelCommandAttributeSyntax\\Facades\\LaravelCommandAttributeSyntax"
             }
         }
     },

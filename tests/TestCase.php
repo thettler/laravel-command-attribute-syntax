@@ -1,36 +1,34 @@
 <?php
 
-namespace VendorName\Skeleton\Tests;
+namespace Thettler\LaravelCommandAttributeSyntax\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Console\Application;
+use Illuminate\Foundation\Console\Kernel;
 use Orchestra\Testbench\TestCase as Orchestra;
-use VendorName\Skeleton\SkeletonServiceProvider;
+use Thettler\LaravelCommandAttributeSyntax\LaravelCommandAttributeSyntaxServiceProvider;
+use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\BasicCommand;
+use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\WithArgumentsCommand;
 
 class TestCase extends Orchestra
 {
     protected function setUp(): void
     {
         parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'VendorName\\Skeleton\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
+        Application::starting(function ($artisan) {
+            $artisan->add(app(BasicCommand::class));
+            $artisan->add(app(WithArgumentsCommand::class));
+        });
     }
 
     protected function getPackageProviders($app)
     {
         return [
-            SkeletonServiceProvider::class,
+            LaravelCommandAttributeSyntaxServiceProvider::class,
         ];
     }
 
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
-
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_skeleton_table.php.stub';
-        $migration->up();
-        */
     }
 }
