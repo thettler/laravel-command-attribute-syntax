@@ -18,6 +18,7 @@ class WithArgumentsCommand extends Command
     {
         $this->line('Works!');
         $this->line($this->optionalArgument);
+
         return 1;
     }
 }

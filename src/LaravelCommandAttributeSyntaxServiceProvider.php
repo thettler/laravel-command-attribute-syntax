@@ -4,7 +4,6 @@ namespace Thettler\LaravelCommandAttributeSyntax;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Thettler\LaravelCommandAttributeSyntax\Commands\LaravelCommandAttributeSyntaxCommand;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\BasicCommand;
 
 class LaravelCommandAttributeSyntaxServiceProvider extends PackageServiceProvider

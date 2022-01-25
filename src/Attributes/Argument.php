@@ -8,7 +8,6 @@ class Argument
     public function __construct(
         public readonly string $description = '',
         public readonly bool $optional = false,
-    )
-    {
+    ) {
     }
 }

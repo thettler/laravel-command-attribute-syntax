@@ -10,7 +10,6 @@ class CommandAttribute
         public readonly string $description = '',
         public readonly string $help = '',
         public readonly ?bool $hidden = null,
-    )
-    {
+    ) {
     }
 }

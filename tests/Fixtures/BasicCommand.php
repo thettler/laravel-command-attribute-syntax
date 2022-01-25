@@ -20,6 +20,7 @@ class BasicCommand extends Command
             ['Description', 'Help', 'Hidden'],
             [[$this->description, $this->help, $this->isHidden()]]
         );
+
         return 1;
     }
 }

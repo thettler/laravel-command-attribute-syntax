@@ -3,7 +3,6 @@
 namespace Thettler\LaravelCommandAttributeSyntax\Tests;
 
 use Illuminate\Console\Application;
-use Illuminate\Foundation\Console\Kernel;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Thettler\LaravelCommandAttributeSyntax\LaravelCommandAttributeSyntaxServiceProvider;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\BasicCommand;
