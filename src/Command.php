@@ -2,18 +2,14 @@
 
 namespace Thettler\LaravelCommandAttributeSyntax;
 
-use Illuminate\Support\Str;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
-use Thettler\LaravelCommandAttributeSyntax\Attributes\CommandAttribute;
 use Thettler\LaravelCommandAttributeSyntax\Reflections\ArgumentReflection;
 use Thettler\LaravelCommandAttributeSyntax\Reflections\CommandReflection;
 use Thettler\LaravelCommandAttributeSyntax\Reflections\OptionReflection;
-use voku\helper\ASCII;
 
 class Command extends \Illuminate\Console\Command
 {
@@ -21,8 +17,9 @@ class Command extends \Illuminate\Console\Command
 
     public function __construct()
     {
-        if (!CommandReflection::usesAttributeSyntax($this::class)) {
+        if (! CommandReflection::usesAttributeSyntax($this::class)) {
             parent::__construct();
+
             return;
         }
 
@@ -39,7 +36,6 @@ class Command extends \Illuminate\Console\Command
 
         return parent::execute($input, $output);
     }
-
 
     protected function hydrateCommand(): void
     {
@@ -70,6 +66,7 @@ class Command extends \Illuminate\Console\Command
                     }
 
                     $this->{$optionReflection->getName()} = $this->option($consoleName);
+
                     return;
                 }
 
@@ -115,7 +112,7 @@ class Command extends \Illuminate\Console\Command
     protected function propertyToArgument(ArgumentReflection $argument): InputArgument
     {
         switch (true) {
-            case $argument->isArray() && !$argument->isOptional():
+            case $argument->isArray() && ! $argument->isOptional():
                 return $this->makeInputArgument($argument, InputArgument::IS_ARRAY | InputArgument::REQUIRED);
 
             case $argument->isArray():
@@ -133,24 +130,29 @@ class Command extends \Illuminate\Console\Command
     {
         switch (true) {
             case $option->hasValue() && $option->isArray():
-                return $this->makeInputOption($option, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                    $option->getDefault());
+                return $this->makeInputOption(
+                    $option,
+                    InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+                    $option->getDefault()
+                );
 
-            case $option->hasValue() && !$option->isOptional():
+            case $option->hasValue() && ! $option->isOptional():
                 return $this->makeInputOption($option, InputOption::VALUE_REQUIRED);
 
             case $option->hasValue():
                 return $this->makeInputOption($option, InputOption::VALUE_OPTIONAL, $option->getDefault());
 
             case $option->isNegatable():
-                return $this->makeInputOption($option, InputOption::VALUE_NEGATABLE,
-                    $option->getDefault() !== null ? $option->getDefault() : false);
+                return $this->makeInputOption(
+                    $option,
+                    InputOption::VALUE_NEGATABLE,
+                    $option->getDefault() !== null ? $option->getDefault() : false
+                );
 
             default:
                 return $this->makeInputOption($option, InputOption::VALUE_NONE);
         }
     }
-
 
     protected function makeInputArgument(
         ArgumentReflection $argument,
@@ -182,14 +184,14 @@ class Command extends \Illuminate\Console\Command
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
         return parent::setDescription($description);
     }
 
     public function setHelp(string $help): self
     {
         $this->help = $help;
+
         return parent::setHelp($help);
     }
-
-
 }

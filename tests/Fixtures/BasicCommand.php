@@ -15,6 +15,7 @@ class BasicCommand extends Command
     public function handle()
     {
         $this->line('Works!');
+
         return 1;
     }
 }

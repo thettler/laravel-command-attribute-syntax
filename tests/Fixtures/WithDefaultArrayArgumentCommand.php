@@ -17,6 +17,7 @@ class WithDefaultArrayArgumentCommand extends Command
     public function handle()
     {
         $this->line(implode(', ', $this->arrayArgument));
+
         return 1;
     }
 }

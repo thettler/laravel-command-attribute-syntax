@@ -2,9 +2,7 @@
 
 namespace Thettler\LaravelCommandAttributeSyntax\Reflections;
 
-use Illuminate\Console\Command;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
-use Thettler\LaravelCommandAttributeSyntax\Attributes\CommandAttribute;
 use Thettler\LaravelCommandAttributeSyntax\Exceptions\CommandAttributeSyntaxException;
 
 final class ArgumentReflection
@@ -23,7 +21,7 @@ final class ArgumentReflection
      */
     public static function new(\ReflectionProperty $property): ArgumentReflection
     {
-        if (!ArgumentReflection::isArgument($property)) {
+        if (! ArgumentReflection::isArgument($property)) {
             throw new CommandAttributeSyntaxException("$property->name has no Argument Attribute.");
         }
 
@@ -32,7 +30,7 @@ final class ArgumentReflection
 
     public static function isArgument(\ReflectionProperty $property): bool
     {
-        return !empty($property->getAttributes(Argument::class));
+        return ! empty($property->getAttributes(Argument::class));
     }
 
     public function getName(): string
@@ -59,7 +57,7 @@ final class ArgumentReflection
 
     public function isArray(): bool
     {
-        if (($type = $this->property->getType()) instanceof \ReflectionNamedType){
+        if (($type = $this->property->getType()) instanceof \ReflectionNamedType) {
             return $type->getName() === 'array';
         }
 

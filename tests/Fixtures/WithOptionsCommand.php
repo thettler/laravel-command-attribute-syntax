@@ -2,7 +2,6 @@
 
 namespace Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures;
 
-use Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\CommandAttribute;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Option;
 use Thettler\LaravelCommandAttributeSyntax\Command;

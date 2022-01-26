@@ -4,7 +4,6 @@ namespace Thettler\LaravelCommandAttributeSyntax\Tests;
 
 use Illuminate\Console\Application;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Thettler\LaravelCommandAttributeSyntax\LaravelCommandAttributeSyntaxServiceProvider;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\BasicCommand;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\BasicHiddenCommand;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\WithArgumentsCommand;

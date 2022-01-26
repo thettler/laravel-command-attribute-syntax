@@ -17,6 +17,7 @@ class WithOptionalArrayArgumentCommand extends Command
     public function handle()
     {
         $this->line('Empty: '. implode(', ', $this->arrayArgument));
+
         return 1;
     }
 }

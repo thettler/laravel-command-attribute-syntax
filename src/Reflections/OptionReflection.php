@@ -2,9 +2,6 @@
 
 namespace Thettler\LaravelCommandAttributeSyntax\Reflections;
 
-use Illuminate\Console\Command;
-use Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
-use Thettler\LaravelCommandAttributeSyntax\Attributes\CommandAttribute;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Option;
 use Thettler\LaravelCommandAttributeSyntax\Exceptions\CommandAttributeSyntaxException;
 
@@ -21,7 +18,7 @@ final class OptionReflection
 
     public static function new(\ReflectionProperty $property): static
     {
-        if (!static::isOption($property)) {
+        if (! static::isOption($property)) {
             throw new CommandAttributeSyntaxException("$property->name has no Option Attribute.");
         }
 
@@ -30,7 +27,7 @@ final class OptionReflection
 
     public static function isOption(\ReflectionProperty $property): bool
     {
-        return !empty($property->getAttributes(Option::class));
+        return ! empty($property->getAttributes(Option::class));
     }
 
     public function getName(): string
@@ -65,9 +62,9 @@ final class OptionReflection
         return $this->optionAttribute->negatable;
     }
 
-    public function hasRequiredValue():bool
+    public function hasRequiredValue(): bool
     {
-        return $this->hasValue() && !$this->isOptional();
+        return $this->hasValue() && ! $this->isOptional();
     }
 
     public function getShortcut(): ?string
@@ -77,7 +74,7 @@ final class OptionReflection
 
     public function hasValue(): bool
     {
-        if (($type = $this->property->getType()) instanceof \ReflectionNamedType){
+        if (($type = $this->property->getType()) instanceof \ReflectionNamedType) {
             return $type->getName() !== 'bool';
         }
 
@@ -86,7 +83,7 @@ final class OptionReflection
 
     public function isArray(): bool
     {
-        if (($type = $this->property->getType()) instanceof \ReflectionNamedType){
+        if (($type = $this->property->getType()) instanceof \ReflectionNamedType) {
             return $type->getName() === 'array';
         }
 

@@ -14,6 +14,7 @@ class BasicHiddenCommand extends Command
     public function handle()
     {
         $this->line('Is Hidden: ' . ($this->isHidden() ? 'Yes' : 'No'));
+
         return 1;
     }
 }
