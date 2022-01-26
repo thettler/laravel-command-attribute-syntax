@@ -26,7 +26,7 @@ final class CommandReflection
      */
     public static function new(string $command): CommandReflection
     {
-        if (!CommandReflection::usesAttributeSyntax($command)) {
+        if (! CommandReflection::usesAttributeSyntax($command)) {
             throw new CommandAttributeSyntaxException("$command does not uses Attribute Syntax.");
         }
 
@@ -51,15 +51,15 @@ final class CommandReflection
     public function getArguments(): Collection
     {
         return collect($this->reflection->getProperties())
-            ->filter(fn(\ReflectionProperty $property) => ArgumentReflection::isArgument($property))
-            ->map(fn(\ReflectionProperty $property) => ArgumentReflection::new($property));
+            ->filter(fn (\ReflectionProperty $property) => ArgumentReflection::isArgument($property))
+            ->map(fn (\ReflectionProperty $property) => ArgumentReflection::new($property));
     }
 
     public function getOptions(): Collection
     {
         return collect($this->reflection->getProperties())
-            ->filter(fn(\ReflectionProperty $property) => OptionReflection::isOption($property))
-            ->map(fn(\ReflectionProperty $property) => OptionReflection::new($property));
+            ->filter(fn (\ReflectionProperty $property) => OptionReflection::isOption($property))
+            ->map(fn (\ReflectionProperty $property) => OptionReflection::new($property));
     }
 
     public function getName(): string
