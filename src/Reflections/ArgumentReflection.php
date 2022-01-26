@@ -18,13 +18,16 @@ final class ArgumentReflection
             ->newInstance();
     }
 
-    public static function new(\ReflectionProperty $property): static
+    /**
+     * @throws CommandAttributeSyntaxException
+     */
+    public static function new(\ReflectionProperty $property): ArgumentReflection
     {
-        if (!static::isArgument($property)) {
+        if (!ArgumentReflection::isArgument($property)) {
             throw new CommandAttributeSyntaxException("$property->name has no Argument Attribute.");
         }
 
-        return new static($property);
+        return new ArgumentReflection($property);
     }
 
     public static function isArgument(\ReflectionProperty $property): bool
@@ -51,7 +54,7 @@ final class ArgumentReflection
 
     public function isOptional(): bool
     {
-        return $this->property->hasDefaultValue() || $this->property->getType()->allowsNull();
+        return $this->property->hasDefaultValue() || $this->property->getType()?->allowsNull();
     }
 
     public function isArray(): bool

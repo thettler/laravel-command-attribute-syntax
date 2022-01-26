@@ -58,12 +58,6 @@
     },
     "extra": {
         "laravel": {
-            "providers": [
-                "Thettler\\LaravelCommandAttributeSyntax\\LaravelCommandAttributeSyntaxServiceProvider"
-            ],
-            "aliases": {
-                "LaravelCommandAttributeSyntax": "Thettler\\LaravelCommandAttributeSyntax\\Facades\\LaravelCommandAttributeSyntax"
-            }
         }
     },
     "minimum-stability": "dev",

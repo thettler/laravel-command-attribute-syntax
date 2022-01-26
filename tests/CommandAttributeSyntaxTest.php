@@ -61,5 +61,78 @@ it('can use default array Argument', function () {
 
 it('can use boolean options', function () {
     artisan('test:options --option')
-        ->expectsOutput('Item 1, Item 2');
+        ->expectsOutput('option: true, true');
+
+    artisan('test:options')
+        ->expectsOutput('option: false, false');
+});
+
+it('can use option with shortcut', function () {
+    artisan('test:options -S')
+        ->expectsOutput('optionShortcut: true, true');
+
+    artisan('test:options --optionShortcut')
+        ->expectsOutput('optionShortcut: true, true');
+
+    artisan('test:options')
+        ->expectsOutput('optionShortcut: false, false');
+});
+
+it('can use option with alternative name', function () {
+    artisan('test:options --alternative')
+        ->expectsOutput('optionAlternativeName: true, true');
+
+    artisan('test:options')
+        ->expectsOutput('optionAlternativeName: false, false');
+});
+
+it('can use negatable option', function () {
+    artisan('test:options --optionNegatable')
+        ->expectsOutput('optionNegatable: true, true');
+
+    artisan('test:options --no-optionNegatable')
+        ->expectsOutput('optionNegatable: false, false');
+
+    artisan('test:options')
+        ->expectsOutput('optionNegatable: false, false');
+});
+
+it('can use option with values', function () {
+    artisan('test:options --optionWithValue=value')
+        ->expectsOutput('optionWithValue: value, value');
+
+    expect(fn () => artisan('test:options --optionWithValue'))
+        ->toThrow('The "--optionWithValue" option requires a value.');
+});
+
+it('can use option with nullable value', function () {
+    artisan('test:options --optionWithNullableValue=value')
+        ->expectsOutput('optionWithNullableValue: value, value');
+
+    artisan('test:options --optionWithNullableValue')
+        ->expectsOutput('optionWithNullableValue: , ');
+});
+
+it('can use option with default value', function () {
+    artisan('test:options --optionWithDefaultValue=value')
+        ->expectsOutput('optionWithDefaultValue: value, value');
+
+    artisan('test:options --optionWithNullableValue')
+        ->expectsOutput('optionWithDefaultValue: default, default');
+});
+
+it('can use option with array value', function () {
+    artisan('test:options --optionArray=Item1 --optionArray=Item2 --optionArray=Item3')
+        ->expectsOutput('optionArray: Item1 Item2 Item3, Item1 Item2 Item3');
+
+    artisan('test:options')
+        ->expectsOutput('optionArray: , ');
+});
+
+it('can use option with array defult value', function () {
+    artisan('test:options --optionDefaultArray=Item1 --optionDefaultArray=Item2')
+        ->expectsOutput('optionDefaultArray: Item1 Item2, Item1 Item2');
+
+    artisan('test:options')
+        ->expectsOutput('optionDefaultArray: default1 default2, default1 default2');
 });

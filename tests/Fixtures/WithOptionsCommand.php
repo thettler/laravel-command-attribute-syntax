@@ -16,39 +16,63 @@ class WithOptionsCommand extends Command
     protected bool $option;
 
     #[Option(
-        shortcut: 'sc'
+        shortcut: 'S'
     )]
     protected bool $optionShortcut;
 
     #[Option(
-        name: 'altName'
+        name: 'alternative'
     )]
-    protected bool $optionAltName;
+    protected bool $optionAlternativeName;
+
+    #[Option(
+        negatable: true
+    )]
+    protected bool $optionNegatable;
 
     #[Option]
     protected string $optionWithValue;
 
     #[Option]
-    protected ?string $optionWithNullableDefaultValue = 'Default';
+    protected ?string $optionWithNullableValue;
 
     #[Option]
-    protected string $optionWithDefaultValue = 'Default';
+    protected string $optionWithDefaultValue = 'default';
 
     #[Option]
     protected array $optionArray;
 
+    #[Option]
+    protected array $optionDefaultArray = ['default1', 'default2'];
 
     public function handle()
     {
+        $this->printOption('option');
+        $this->printOption('optionShortcut');
+        $this->printOption('optionAlternativeName', 'alternative');
+        $this->printOption('optionNegatable', 'optionNegatable');
 
-        $this->line('option: '.$this->option.', '.$this->option('option'));
-        $this->line('optionShortcut: '.$this->optionShortcut.', '.$this->option('optionShortcut'));
-        $this->line('optionAltName: ').$this->optionAltName.', '.$this->option('optionAltName');
-        $this->line('optionWithValue: '.$this->optionWithValue.', '.$this->option('optionWithValue'));
-        $this->line('optionWithNullableDefaultValue: '.$this->optionWithNullableDefaultValue.', '.$this->option('optionWithNullableDefaultValue'));
+        if ($this->option('optionWithValue')) {
+            $this->line('optionWithValue: '.$this->optionWithValue.', '.$this->option('optionWithValue'));
+        }
+
+        $this->line('optionWithNullableValue: '.$this->optionWithNullableValue.', '.$this->option('optionWithNullableValue'));
         $this->line('optionWithDefaultValue: '.$this->optionWithDefaultValue.', '.$this->option('optionWithDefaultValue'));
-        $this->line('optionArray: '. implode(' ', $this->optionArray).', '.implode(' ',$this->option('optionArray')));
+
+        $this->line('optionArray: '.implode(' ', $this->optionArray).', '.implode(' ', $this->option('optionArray')));
+        $this->line('optionDefaultArray: '.implode(' ', $this->optionDefaultArray).', '.implode(' ', $this->option('optionDefaultArray')));
 
         return 1;
+    }
+
+    protected function printOption(string $name, ?string $alternativeName = null): void
+    {
+        $this->line($name.': '.$this->boolToString($this->{$name}).', '.$this->boolToString($this->option($alternativeName ?? $name)));
+    }
+
+    protected function boolToString(
+        bool $bool
+    ): string {
+        return $bool ? 'true' : 'false';
     }
 }

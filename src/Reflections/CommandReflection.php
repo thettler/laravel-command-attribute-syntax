@@ -19,13 +19,18 @@ final class CommandReflection
             ->newInstance();
     }
 
-    public static function new(string $command): static
+    /**
+     * @param  class-string<Command>  $command
+     * @throws \ReflectionException
+     * @throws CommandAttributeSyntaxException
+     */
+    public static function new(string $command): CommandReflection
     {
-        if (!static::usesAttributeSyntax($command)) {
+        if (!CommandReflection::usesAttributeSyntax($command)) {
             throw new CommandAttributeSyntaxException("$command does not uses Attribute Syntax.");
         }
 
-        return new static(new \ReflectionClass($command));
+        return new CommandReflection(new \ReflectionClass($command));
     }
 
     /**

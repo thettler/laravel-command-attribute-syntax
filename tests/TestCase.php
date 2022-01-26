@@ -11,6 +11,7 @@ use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\WithArgumentsCommand;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\WithArrayArgumentCommand;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\WithDefaultArrayArgumentCommand;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\WithOptionalArrayArgumentCommand;
+use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\WithOptionsCommand;
 
 class TestCase extends Orchestra
 {
@@ -24,18 +25,7 @@ class TestCase extends Orchestra
             $artisan->add(app(WithArrayArgumentCommand::class));
             $artisan->add(app(WithOptionalArrayArgumentCommand::class));
             $artisan->add(app(WithDefaultArrayArgumentCommand::class));
+            $artisan->add(app(WithOptionsCommand::class));
         });
-    }
-
-    protected function getPackageProviders($app)
-    {
-        return [
-            LaravelCommandAttributeSyntaxServiceProvider::class,
-        ];
-    }
-
-    public function getEnvironmentSetUp($app)
-    {
-        config()->set('database.default', 'testing');
     }
 }

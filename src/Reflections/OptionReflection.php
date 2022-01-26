@@ -38,6 +38,11 @@ final class OptionReflection
         return $this->property->getName();
     }
 
+    public function getAlternativeName(): ?string
+    {
+        return $this->optionAttribute->name;
+    }
+
     public function getDescription(): string
     {
         return $this->optionAttribute->description;
@@ -52,7 +57,31 @@ final class OptionReflection
 
     public function isOptional(): bool
     {
-        return $this->property->hasDefaultValue() || $this->property->getType()->allowsNull();
+        return $this->property->hasDefaultValue() || $this->property->getType()?->allowsNull();
+    }
+
+    public function isNegatable(): bool
+    {
+        return $this->optionAttribute->negatable;
+    }
+
+    public function hasRequiredValue():bool
+    {
+        return $this->hasValue() && !$this->isOptional();
+    }
+
+    public function getShortcut(): ?string
+    {
+        return $this->optionAttribute->shortcut;
+    }
+
+    public function hasValue(): bool
+    {
+        if (($type = $this->property->getType()) instanceof \ReflectionNamedType){
+            return $type->getName() !== 'bool';
+        }
+
+        return false;
     }
 
     public function isArray(): bool
