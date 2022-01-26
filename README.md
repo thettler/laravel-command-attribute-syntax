@@ -7,19 +7,20 @@
 
 ![Header Image](/.github/header_img.png)
 
-Use PHP Attributes instead of the Laravel `$signiture` property to define your Arguments and Options on Artisan
-Commands. Can be used with existing commands without the need to touch the `handle()` method. 
-Supports all Laravel features plus:
+This package lets you use PHP Attributes to define your Arguments and Options on Artisan
+Commands. 
+You do not need to touch the `handle()` method in existing commands in order to use this package. 
+Supports all Laravel features and more:
 - Negatable Options
 - Required Value Options
 
-## Support me
+## :purple_heart:  Support me
 
-Visit my blog on [bitbench.dev](bitbench.dev) or follow me on Social
-Media [Twitter @bitbench](https://twitter.com/bitbench)
-, [Instagram @bitbench.dev](https://www.instagram.com/bitbench.dev/)
+Visit my blog on [bitbench.dev](bitbench.dev) or follow me on Social Media 
+[Twitter @bitbench](https://twitter.com/bitbench)
+[Instagram @bitbench.dev](https://www.instagram.com/bitbench.dev/)
 
-## Installation
+## :package:  Installation
 
 You can install the package via composer:
 
@@ -27,17 +28,18 @@ You can install the package via composer:
 composer require thettler/laravel-command-attribute-syntax
 ```
 
-## Usage
+## :wrench:  Usage
 
-> Before you use this package you should already have an understanting of Artisan Commands. You can read about them [here](https://laravel.com/docs/8.x/artisan).
+> :right_anger_bubble:  Before you use this package you should already have an understanding of Artisan Commands. You can read about them [here](https://laravel.com/docs/8.x/artisan).
 
 ### A Basic Command
 
-To use the attributes in your commands you first need to extend your command
-with `Thettler\LaravelCommandAttributeSyntax\Command`. Then add
-the `Thettler\LaravelCommandAttributeSyntax\Attributes\CommandAttribute` to the class:
-The `CommandAttribute` requires the `name`paramenter to be set. This will be the name of the Command which you can use
-to call it from the commandline.
+To use the attributes in your commands you first need to replace the default `\Illuminate\Console\Command` class
+with `Thettler\LaravelCommandAttributeSyntax\Command`. 
+Then add the `Thettler\LaravelCommandAttributeSyntax\Attributes\CommandAttribute` to the class.
+
+The `CommandAttribute` requires the `name` parameter to be set. 
+This will be the name of the Command which you can use to call it from the commandline.
 
 ```php
 <?php
@@ -58,21 +60,19 @@ class BasicCommand extends Command
 }
 ```
 
-And call it with.
+And call it like:
 
 ```bash
 php artisan basic
 ```
 
-<details><summary>Tratitional Syntax</summary>
+<details><summary>Traditional Syntax</summary>
 <p>
 
 ```php
     
 <?php
-
 namespace App\Console\Commands;
-
 
 use Illuminate\Console\Command;
 
@@ -80,28 +80,25 @@ class BasicCommand extends Command
 {
     protected $signature = 'basic';
 
-
     public function handle()
     {
         return 1;
     }
 }
 ```
-
 </p>
 </details>
 
 ### Descriptions, Help and Hidden Commands
 
 If you want to add a description, a help comment or mark the command as hidden, you can specify this on
-the `CommandAttribute`
+the `CommandAttribute` like this:
 
 ```php
-...
 #[CommandAttribute(
     name: 'basic',
-    description: 'Some usefull description.',
-    help: 'Some helpfull text.',
+    description: 'Some useful description.',
+    help: 'Some helpful text.',
     hidden: true
 )]
 class BasicCommand extends Command
@@ -110,18 +107,12 @@ class BasicCommand extends Command
 }
 ```
 
-And call it like.
+I like to use named arguments for a more readable look.
 
-```bash
-php artisan basic
-```
-
-<details><summary>Tratitional Syntax</summary>
+<details><summary>Traditional Syntax</summary>
 <p>
 
 ```php
-    
-<?php
 ...
 class BasicCommand extends Command
 {
@@ -139,12 +130,23 @@ class BasicCommand extends Command
 </p>
 </details>
 
-## Defining Input Expectations
+### Defining Input Expectations
+The basic workflow to add an argument or option is always to add a property and decorate it with an Attribute.
+`#[Option]` if you want an option and  `#[Argument]`if you want an argument.
+The property will be hydrated with the value from the command line, so you can use it like any normal
+property inside your `handle()` method. It's also possible to access the arguments and options via the
+normal laravel methods `$this->argument('propertyName')` or `$this->argument('propertyName')`.
+
+More about that in the following sections. :arrow_down: 
+
+> :exclamation: The property will only be hydrated inside of the `handle()` method. Keep that in mind.
+
 
 ### Arguments
 
-To define Arguments you create a property and add the `Argument` attribute to it. The value will be passed through to
-the property and can normally be used in the `handle()`.
+To define Arguments you create a property and add the `Argument` attribute to it. 
+The property will be hydrated with the value from the command line, so you can use it like any normal 
+property inside your `handle()` method.
 
 ```php
 use \Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
@@ -158,46 +160,42 @@ class BasicCommand extends Command
     protected string $myArgument;
     
     public function handle() {
-        dump($this->myArgument); //the input from the commandline
-        dump($this->argument('myArgument')); // does also still work
+        $this->line($this->myArgument);
+        $this->line($this->argument('myArgument'));
     }
 }
 ```
 
-Call it like:
+call it like:
 
 ```bash
 php artisan basic myValue
+# Output:
+# myValue
+# myValue
 ```
 
-<details><summary>Tratitional Syntax</summary>
+<details><summary>Traditional Syntax</summary>
 <p>
 
 ```php
-    
-<?php
-...
 class BasicCommand extends Command
 {
     protected $signature = 'basic {myArgument}';
     
     public function handle() {
-        dump($this->argument('myArgument'));
+        $this->line($this->argument('myArgument'));
     }
 }
 ```
-
 </p>
 </details>
 
 #### Array Arguments
 
-You can also use arrays in arguments, simply typehint the property as Array or as nullable Array if you want your
-Argument to be optional.
+You can also use arrays in arguments, simply typehint the property as `array`.
 
 ```php
-use \Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
-
 #[CommandAttribute(
     name: 'basic',
 )]
@@ -207,8 +205,7 @@ class BasicCommand extends Command
     protected array $myArray;
     
     public function handle() {
-        dump($this->myArray); //the input from the commandline
-        dump($this->argument('myArray')); // does also still work
+        $this->line(implode(', ', $this->myArray));
     }
 }
 ```
@@ -217,21 +214,20 @@ Call it like:
 
 ```bash
 php artisan basic Item1 Item2 Item3 
+# Output
+# Item1, Item2, Item3 
 ```
 
-<details><summary>Tratitional Syntax</summary>
+<details><summary>Traditional Syntax</summary>
 <p>
 
 ```php
-    
-<?php
-...
 class BasicCommand extends Command
 {
     protected $signature = 'basic {myArgument*}';
     
     public function handle() {
-        dump($this->argument('myArgument'));
+        $this->line($this->argument('myArgument'));
     }
 }
 ```
@@ -243,9 +239,10 @@ class BasicCommand extends Command
 
 Of course, you can use optional arguments as well. To achieve this you simply make the property nullable.
 
-```php
-use \Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
+> :information_source: This works with `array` as well but the property won't be null but an empty array
+> instead
 
+```php
 #[CommandAttribute(
     name: 'basic',
 )]
@@ -254,38 +251,29 @@ class BasicCommand extends Command
     #[Argument]
     protected ?string $myArgument;
     
-    public function handle() {
-        dump($this->myArgument); //null
-        dump($this->argument('myArgument')); // null
-    }
+    ...
 }
 ```
 
-<details><summary>Tratitional Syntax</summary>
+<details><summary>Traditional Syntax</summary>
 <p>
 
 ```php
-    
-<?php
-...
 class BasicCommand extends Command
 {
     protected $signature = 'basic {myArgument?}';
     
-    public function handle() {
-        dump($this->argument('myArgument')); // null
-    }
+    ...
 }
 ```
 
 </p>
 </details>
 
-If you want your argument to have a default value you can simpy add it to the property.
+If your argument should have a default value, you can assign a value to the property which will be used 
+as default value.
 
 ```php
-use \Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
-
 #[CommandAttribute(
     name: 'basic',
 )]
@@ -294,46 +282,30 @@ class BasicCommand extends Command
     #[Argument]
     protected string $myArgument = 'default';
     
-    public function handle() {
-        dump($this->myArgument); // default
-        dump($this->argument('myArgument')); // default
-    }
+    ...
 }
 ```
 
-<details><summary>Tratitional Syntax</summary>
+<details><summary>Traditional Syntax</summary>
 <p>
 
 ```php
-    
-<?php
-...
 class BasicCommand extends Command
 {
     protected $signature = 'basic {myArgument=default}';
     
-    public function handle() {
-        dump($this->argument('myArgument')); // default
-    }
+    ...
 }
 ```
 
 </p>
 </details>
 
-Call it like:
-
-```bash
-php artisan basic
-```
-
 #### Argument Description
 
-You can set a description for arguments on the `Argument` Attribute.
+You can set a description for arguments as parameter on the `Argument` Attribute.
 
 ```php
-use \Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
-
 #[CommandAttribute(
     name: 'basic',
 )]
@@ -344,38 +316,32 @@ class BasicCommand extends Command
     )]
     protected string $myArgument;
     
-    public function handle() {
-        dump($this->myArgument); // default
-        dump($this->argument('myArgument')); // default
-    }
+    ...
 }
 ```
 
-<details><summary>Tratitional Syntax</summary>
+<details><summary>Traditional Syntax</summary>
 <p>
 
 ```php
-<?php
 ...
 class BasicCommand extends Command
 {
     protected $signature = 'basic {myArgument: Argument Description}';
     
-    public function handle() {
-        dump($this->argument('myArgument')); // default
-    }
+    ...
 }
 ```
 
 </p>
 </details>
 
-> :exclamation: If you have more than one argument the order inside the class will also be the order in the commandline
+> :exclamation: :exclamation: If you have more than one argument the order inside the class will also be the order on the commandline
 
 ### Options
 
-To use options in your commands you use the `Options` Attribute. If you have set a typehint of `boolean` it will be
-false if the option was not set and true if it was set.
+To use options in your commands you use the `Options` Attribute. 
+If you have set a typehint of `boolean` it will be false if the option was not set and true if it was set.
 
 ```php
 use \Thettler\LaravelCommandAttributeSyntax\Attributes\Option;
@@ -389,8 +355,8 @@ class BasicCommand extends Command
     protected bool $myOption;
     
     public function handle() {
-        dump($this->myOption); // the input from the commandline
-        dump($this->option('myOption')); // does also still work
+        dump($this->myOption);
+        dump($this->option('myOption'));
     }
 }
 ```
@@ -399,15 +365,22 @@ Call it like:
 
 ```bash
 php artisan basic --myOption
+# Output
+# true
+# true
 ```
 
-<details><summary>Tratitional Syntax</summary>
+```bash
+php artisan basic
+# Output
+# false
+# false
+```
+
+<details><summary>Traditional Syntax</summary>
 <p>
 
 ```php
-    
-<?php
-...
 class BasicCommand extends Command
 {
     protected $signature = 'basic {--myOption}';
@@ -423,8 +396,14 @@ class BasicCommand extends Command
 
 #### Value Options
 
-You can add a value to an option if you type hint the property not as bool. This will automatically make it an option
-with a value.
+You can add a value to an option if you type hint the property with something different as `bool`. 
+This will automatically make it to an option with a value.
+If your typehint is not nullable the option will have a required value. 
+This the option can only be used with a value.
+
+:x: Wont work `--myoption` :white_check_mark: works `--myoption=myvalue`
+
+If you want to make the value optional simply make the type nullable or assign a value to the property
 
 ```php
 #[CommandAttribute(
@@ -456,22 +435,17 @@ Call it like:
 php artisan basic --requiredValue=someValue --optionalValue --array=Item1 --array=Item2
 ```
 
-<details><summary>Tratitional Syntax</summary>
+<details><summary>Traditional Syntax</summary>
 <p>
 
 ```php
-    
-<?php
-...
 class BasicCommand extends Command
 {
     // requiredValue is not possible
     // defaultArray is not possible
     protected $signature = 'basic {--optionalValue=} {--defaultValue=default} {--array=*}';
-    
-    public function handle() {
-        dump($this->option('myOption'));
-    }
+   
+   ...
 }
 ```
 
@@ -480,7 +454,7 @@ class BasicCommand extends Command
 
 #### Option Description
 
-You can set a description for options on the `Option` Attribute.
+You can set a description for an option on the `Option` Attribute.
 
 ```php
 #[CommandAttribute(
@@ -496,12 +470,10 @@ class BasicCommand extends Command
 }
 ```
 
-<details><summary>Tratitional Syntax</summary>
+<details><summary>Traditional Syntax</summary>
 <p>
 
 ```php
-<?php
-...
 class BasicCommand extends Command
 {
     protected $signature = 'basic {--option: Option Description}';
@@ -513,7 +485,8 @@ class BasicCommand extends Command
 
 #### Option Shortcuts
 
-You can set a shortcut for options on the `Option` Attribute.
+You can set a shortcut for an option on the `Option` Attribute.  
+
 > :warning: Be aware that a shortcut can only be one char long
 
 ```php
@@ -536,12 +509,10 @@ Call it like:
 php artisan basic -Q
 ```
 
-<details><summary>Tratitional Syntax</summary>
+<details><summary>Traditional Syntax</summary>
 <p>
 
 ```php
-<?php
-...
 class BasicCommand extends Command
 {
     protected $signature = 'basic {--Q|option}';
@@ -553,8 +524,9 @@ class BasicCommand extends Command
 
 #### Option alias
 
-By default the option named used on the commandline will be same as the property name. You can change this with
-the `name` parameter on the `Option` Attribute.
+By default, the option name used on the commandline will be same as the property name. 
+You can change this with the `name` parameter on the `Option` Attribute. 
+This can be handy if you have conflicting property names or want a more expressive api for your commands.
 
 > :warning: If you use the `->option()` syntax you need to specify the alias name to get the option.
 
@@ -582,23 +554,8 @@ Call it like:
 php artisan basic --alternativeName
 ```
 
-<details><summary>Tratitional Syntax</summary>
-<p>
-
-```php
-<?php
-...
-class BasicCommand extends Command
-{
-    protected $signature = 'basic {--Q|option}';
-}
-```
-
-</p>
-</details>
-
 #### Negatable Options
-You can make option Negatable by adding the negatable parameter to the `Option` Attribute
+You can make option Negatable by adding the negatable parameter to the `Option` Attribute.
 Now the option accepts either the flag (e.g. --yell) or its negation (e.g. --no-yell).
 
 ```php
@@ -626,29 +583,29 @@ php artisan basic --yell
 php artisan basic --no-yell
 ```
 
-## Testing
+## :robot:  Testing
 
 ```bash
 composer test
 ```
 
-## Changelog
+## :open_book:  Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
-## Contributing
+## :angel:  Contributing
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
-## Security Vulnerabilities
+## :lock:  Security Vulnerabilities
 
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
-## Credits
+## :copyright:  Credits
 
 - [Tobias Hettler](https://github.com/thettler)
 - [All Contributors](../../contributors)
 
-## License
+## :books:  License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
