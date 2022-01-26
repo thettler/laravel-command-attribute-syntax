@@ -5,7 +5,9 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/thettler/laravel-command-attribute-syntax/Check%20&%20fix%20styling?label=code%20style)](https://github.com/thettler/laravel-command-attribute-syntax/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/thettler/laravel-command-attribute-syntax.svg?style=flat-square)](https://packagist.org/packages/thettler/laravel-command-attribute-syntax)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+![Header Image](/.github/header_img.png)
+
+Use PHP Attributes instead of the Laravel `$signiture` property to define your Arguments and Options on Artisan Commands
 
 ## Support us
 
@@ -23,38 +25,8 @@ You can install the package via composer:
 composer require thettler/laravel-command-attribute-syntax
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="laravel-command-attribute-syntax-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="laravel-command-attribute-syntax-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-command-attribute-syntax-views"
-```
-
 ## Usage
 
-```php
-$laravelCommandAttributeSyntax = new Thettler\LaravelCommandAttributeSyntax();
-echo $laravelCommandAttributeSyntax->echoPhrase('Hello, Thettler!');
-```
 
 ## Testing
 
