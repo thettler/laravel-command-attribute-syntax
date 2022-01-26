@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": "^8.1",
+        "symfony/console": "^5.3",
         "spatie/laravel-package-tools": "^1.9.2",
         "illuminate/contracts": "^8.73"
     },
@@ -35,8 +36,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Thettler\\LaravelCommandAttributeSyntax\\": "src",
-            "Thettler\\LaravelCommandAttributeSyntax\\Database\\Factories\\": "database/factories"
+            "Thettler\\LaravelCommandAttributeSyntax\\": "src"
         }
     },
     "autoload-dev": {
