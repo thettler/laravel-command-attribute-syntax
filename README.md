@@ -135,7 +135,7 @@ The basic workflow to add an argument or option is always to add a property and 
 `#[Option]` if you want an option and  `#[Argument]`if you want an argument.
 The property will be hydrated with the value from the command line, so you can use it like any normal
 property inside your `handle()` method. It's also possible to access the arguments and options via the
-normal laravel methods `$this->argument('propertyName')` or `$this->argument('propertyName')`.
+normal laravel methods `$this->argument('propertyName')` or `$this->option('propertyName')`.
 
 More about that in the following sections. :arrow_down: 
 
@@ -399,7 +399,7 @@ class BasicCommand extends Command
 You can add a value to an option if you type hint the property with something different as `bool`. 
 This will automatically make it to an option with a value.
 If your typehint is not nullable the option will have a required value. 
-This the option can only be used with a value.
+This means the option can only be used with a value.
 
 :x: Wont work `--myoption` :white_check_mark: works `--myoption=myvalue`
 
