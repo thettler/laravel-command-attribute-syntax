@@ -6,7 +6,7 @@ use Thettler\LaravelCommandAttributeSyntax\Contracts\CastInterface;
 
 class EnumCast implements CastInterface
 {
-     public static function match(string $typeName, mixed $value): bool
+    public static function match(string $typeName, mixed $value): bool
     {
       return enum_exists($typeName);
     }

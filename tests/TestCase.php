@@ -37,5 +37,4 @@ class TestCase extends Orchestra
             LaravelCommandAttributeSyntaxServiceProvider::class,
         ];
     }
-
 }
