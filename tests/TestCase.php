@@ -4,11 +4,13 @@ namespace Thettler\LaravelCommandAttributeSyntax\Tests;
 
 use Illuminate\Console\Application;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Thettler\LaravelCommandAttributeSyntax\LaravelCommandAttributeSyntaxServiceProvider;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\BasicCommand;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\BasicHiddenCommand;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\WithArgumentsCommand;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\WithArrayArgumentCommand;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\WithDefaultArrayArgumentCommand;
+use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\WithEnumCastCommand;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\WithOptionalArrayArgumentCommand;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\WithOptionsCommand;
 
@@ -25,6 +27,15 @@ class TestCase extends Orchestra
             $artisan->add(app(WithOptionalArrayArgumentCommand::class));
             $artisan->add(app(WithDefaultArrayArgumentCommand::class));
             $artisan->add(app(WithOptionsCommand::class));
+            $artisan->add(app(WithEnumCastCommand::class));
         });
     }
+
+    protected function getPackageProviders($app)
+    {
+        return [
+            LaravelCommandAttributeSyntaxServiceProvider::class,
+        ];
+    }
+
 }

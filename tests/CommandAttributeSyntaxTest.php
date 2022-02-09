@@ -129,10 +129,16 @@ it('can use option with array value', function () {
         ->expectsOutput('optionArray: , ');
 });
 
-it('can use option with array defult value', function () {
+it('can use option with array default value', function () {
     artisan('test:options --optionDefaultArray=Item1 --optionDefaultArray=Item2')
         ->expectsOutput('optionDefaultArray: Item1 Item2, Item1 Item2');
 
     artisan('test:options')
         ->expectsOutput('optionDefaultArray: default1 default2, default1 default2');
 });
+
+it('can cast enums', function () {
+    artisan('test:enum B "String B" 2 --enum=B --stringEnum="String B" --intEnum=2');
+});
+
+

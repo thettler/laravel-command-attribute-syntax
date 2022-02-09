@@ -13,6 +13,8 @@ You do not need to touch the `handle()` method in existing commands in order to 
 Supports all Laravel features and more:
 - Negatable Options
 - Required Value Options
+- Enum Types
+- Casting
 
 ## :purple_heart:  Support me
 
@@ -581,6 +583,131 @@ Call it like:
 ```bash
 php artisan basic --yell
 php artisan basic --no-yell
+```
+
+#### Enum Types
+It is also possible to type `Arguments` or `Options` as Enum. The Package will automatically cast the input from the 
+commandline to the typed Enum. If you use BackedEnums you use the value of the case and if you have a non backed Enum you use the name of the Case.
+
+```php
+enum Enum
+{
+    case A;
+    case B;
+    case C;
+}
+
+enum IntEnum: int
+{
+    case A = 1;
+    case B = 2;
+    case C = 3;
+}
+
+enum StringEnum: string
+{
+    case A = 'String A';
+    case B = 'String B';
+    case C = 'String C';
+}
+```
+
+```php
+    #[Argument]
+    protected Enum $argEnum;
+
+    #[Argument]
+    protected StringEnum $argStringEnum;
+
+    #[Argument]
+    protected IntEnum $argIntEnum;
+
+    #[Option]
+    protected Enum $enum;
+
+    #[Option]
+    protected StringEnum $stringEnum;
+
+    #[Option]
+    protected IntEnum $intEnum;
+```
+```bash
+php artisan enum B "String B" 2 --enum=B --stringEnum="String B" --intEnum=2
+```
+
+#### Casts
+It's also possible to define your own casts. To do so you need to create a class that implements the `CastInterface`.
+The `match()` method checks if a type can be cast by this cast-class and returns `true` if it is possible and false if not.
+
+Let's have a look at small UserCast that allows to simply use the id of a user model on the command line and automatically fetch the
+correct user from the database: 
+
+```php
+<?php
+
+namespace Thettler\LaravelCommandAttributeSyntax\Casts;
+
+use Thettler\LaravelCommandAttributeSyntax\Contracts\CastInterface;
+
+class UserCast implements CastInterface
+{
+     public static function match(\ReflectionType $type, int|array|string|bool|null $value): bool
+    {
+        if ( ! $type instanceof \ReflectionNamedType || $type->isBuiltin()) {
+            return false;
+        }
+
+        return $type->getName() === User::class;
+    }
+
+    public function cast(mixed $value, \ReflectionNamedType $type): User
+    {
+        return User::find($value);
+    }
+}
+```
+
+To register your cast you need to publish the config file first: 
+
+```bash
+php artisan vendor:publish --tag="command-attribute-syntax-config"
+```
+and add your cast to the cast array: 
+
+```php
+return [
+    'casts' => [
+            \Thettler\LaravelCommandAttributeSyntax\Casts\EnumCast::class
+    ]
+];
+```
+
+The package goes top to bottom through the array and uses the first cast that returns `true` from the `match()` method.
+
+Now finally typehint our Argument (or Option).
+```php
+#[CommandAttribute(name: 'userName')]
+class UserNameCommand extends \Thettler\LaravelCommandAttributeSyntax\Command
+{
+    #[Argument]
+    protected User $user;
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        $this->line($this->user->name);
+        return 0;
+    }
+}
+```
+
+```bash
+php artisan userName 2
+ // Some Name
 ```
 
 ## :robot:  Testing

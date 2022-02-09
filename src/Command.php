@@ -49,7 +49,7 @@ class Command extends \Illuminate\Console\Command
         $this->reflection
             ->getArguments()
             ->each(function (ArgumentReflection $argumentReflection) {
-                $this->{$argumentReflection->getName()} = $this->argument($argumentReflection->getName());
+                $this->{$argumentReflection->getName()} = $argumentReflection->cast($this->argument($argumentReflection->getName()));
             });
     }
 
@@ -65,12 +65,12 @@ class Command extends \Illuminate\Console\Command
                         return;
                     }
 
-                    $this->{$optionReflection->getName()} = $this->option($consoleName);
+                    $this->{$optionReflection->getName()} = $optionReflection->cast($this->option($consoleName));
 
                     return;
                 }
 
-                $this->{$optionReflection->getName()} = $this->option($consoleName);
+                $this->{$optionReflection->getName()} = $optionReflection->cast($this->option($consoleName));
             });
     }
 

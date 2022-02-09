@@ -3,7 +3,9 @@
 namespace Thettler\LaravelCommandAttributeSyntax\Reflections;
 
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
+use Thettler\LaravelCommandAttributeSyntax\Contracts\CastInterface;
 use Thettler\LaravelCommandAttributeSyntax\Exceptions\CommandAttributeSyntaxException;
+use function Pest\Laravel\instance;
 
 final class ArgumentReflection
 {
@@ -62,5 +64,29 @@ final class ArgumentReflection
         }
 
         return false;
+    }
+
+    public function cast(int|array|string|bool|null $value): mixed
+    {
+        if (!$this->property->getType()) {
+            return $value;
+        }
+
+        /** @var class-string<CastInterface> $caster */
+        foreach (config('command-attribute-syntax.casts') as $caster) {
+            $type = $this->property->getType();
+
+            if (! $type instanceof \ReflectionNamedType) {
+                continue;
+            }
+
+            if (!$caster::match($type, $value)) {
+                continue;
+            }
+
+            return (new $caster())->cast($value, $type);
+        }
+
+        return $value;
     }
 }
