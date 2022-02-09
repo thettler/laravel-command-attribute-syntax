@@ -6,21 +6,17 @@ use Thettler\LaravelCommandAttributeSyntax\Contracts\CastInterface;
 
 class EnumCast implements CastInterface
 {
-     public static function match(\ReflectionType $type, int|array|string|bool|null $value): bool
+     public static function match(string $typeName, mixed $value): bool
     {
-        if ( ! $type instanceof \ReflectionNamedType || $type->isBuiltin()) {
-            return false;
-        }
-
-        return enum_exists($type->getName());
+      return enum_exists($typeName);
     }
 
-    public function cast(mixed $value, \ReflectionNamedType $type): \UnitEnum
+    public function cast(mixed $value, string $typeName): \UnitEnum
     {
-        $enum = new \ReflectionEnum($type->getName());
+        $enum = new \ReflectionEnum($typeName);
 
         return $enum->isBacked()
-            ? ($type->getName())::from((string) $value)
+            ? ($typeName)::from((string) $value)
             : $enum->getCase((string) $value)->getValue();
     }
 }

@@ -651,16 +651,12 @@ use Thettler\LaravelCommandAttributeSyntax\Contracts\CastInterface;
 
 class UserCast implements CastInterface
 {
-     public static function match(\ReflectionType $type, int|array|string|bool|null $value): bool
+     public static function match(string $typeName, mixed $value): bool
     {
-        if ( ! $type instanceof \ReflectionNamedType || $type->isBuiltin()) {
-            return false;
-        }
-
-        return $type->getName() === User::class;
+        return $typeName === User::class;
     }
 
-    public function cast(mixed $value, \ReflectionNamedType $type): User
+    public function cast(mixed $value, string $typeName): User
     {
         return User::find($value);
     }
@@ -677,7 +673,7 @@ and add your cast to the cast array:
 ```php
 return [
     'casts' => [
-            \Thettler\LaravelCommandAttributeSyntax\Casts\EnumCast::class
+            \Thettler\LaravelCommandAttributeSyntax\Casts\UserCast::class
     ]
 ];
 ```
@@ -700,7 +696,6 @@ class UserNameCommand extends \Thettler\LaravelCommandAttributeSyntax\Command
     public function handle()
     {
         $this->line($this->user->name);
-        return 0;
     }
 }
 ```

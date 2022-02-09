@@ -4,6 +4,6 @@ namespace Thettler\LaravelCommandAttributeSyntax\Contracts;
 
 interface CastInterface
 {
-    public static function match(\ReflectionType $type, int|array|string|bool|null $value): bool;
-    public function cast(mixed $value, \ReflectionNamedType $type): mixed;
+    public static function match(string $typeName, int|array|string|bool|null $value): bool;
+    public function cast(mixed $value, string $typeName): mixed;
 }

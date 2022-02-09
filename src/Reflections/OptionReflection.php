@@ -105,11 +105,11 @@ final class OptionReflection
                 continue;
             }
 
-            if (!$caster::match($type, $value)) {
+            if (!$caster::match($type->getName(), $value)) {
                 continue;
             }
 
-            return (new $caster())->cast($value, $type);
+            return (new $caster())->cast($value, $type->getName());
         }
 
         return $value;
