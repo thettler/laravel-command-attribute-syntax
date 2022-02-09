@@ -18,7 +18,7 @@ Supports all Laravel features and more:
 
 ## :purple_heart:  Support me
 
-Visit my blog on [bitbench.dev](bitbench.dev) or follow me on Social Media 
+Visit my blog on [https://bitbench.dev](bitbench.dev) or follow me on Social Media 
 [Twitter @bitbench](https://twitter.com/bitbench)
 [Instagram @bitbench.dev](https://www.instagram.com/bitbench.dev/)
 
