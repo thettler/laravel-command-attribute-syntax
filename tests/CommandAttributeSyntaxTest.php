@@ -140,5 +140,3 @@ it('can use option with array default value', function () {
 it('can cast enums', function () {
     artisan('test:enum B "String B" 2 --enum=B --stringEnum="String B" --intEnum=2');
 });
-
-

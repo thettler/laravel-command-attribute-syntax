@@ -6,9 +6,9 @@ use Thettler\LaravelCommandAttributeSyntax\Contracts\CastInterface;
 
 class EnumCast implements CastInterface
 {
-     public static function match(\ReflectionType $type, int|array|string|bool|null $value): bool
+    public static function match(\ReflectionType $type, int|array|string|bool|null $value): bool
     {
-        if ( ! $type instanceof \ReflectionNamedType || $type->isBuiltin()) {
+        if (! $type instanceof \ReflectionNamedType || $type->isBuiltin()) {
             return false;
         }
 
