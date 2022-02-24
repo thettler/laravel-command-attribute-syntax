@@ -47,10 +47,10 @@ This will be the name of the Command which you can use to call it from the comma
 <?php
 namespace App\Console\Commands;
 
-use Thettler\LaravelCommandAttributeSyntax\Attributes\CommandAttribute;
+use Thettler\LaravelCommandAttributeSyntax\Attributes\ArtisanCommand;
 use Thettler\LaravelCommandAttributeSyntax\Command;
 
-#[CommandAttribute(
+#[ArtisanCommand(
     name: 'basic',
 )]
 class BasicCommand extends Command
