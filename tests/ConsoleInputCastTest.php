@@ -6,13 +6,9 @@ use Thettler\LaravelCommandAttributeSyntax\Attributes\Option;
 use Thettler\LaravelCommandAttributeSyntax\Concerns\UsesAttributeSyntax;
 use Thettler\LaravelCommandAttributeSyntax\ConsoleToolkit;
 use Thettler\LaravelCommandAttributeSyntax\Contracts\Caster;
-use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\Enum;
-use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\IntEnum;
-use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\StringEnum;
 
 class NullCast implements Caster
 {
-
     public function from(mixed $value, string $type, \ReflectionProperty $property): int|float|array|string|bool|null
     {
         return $value . ' fromCast';
@@ -24,8 +20,7 @@ class NullCast implements Caster
     }
 }
 
-$caster = new class implements Caster {
-
+$caster = new class () implements Caster {
     public function from(mixed $value, string $type, \ReflectionProperty $property): int|float|array|string|bool|null
     {
         return $value->value;
@@ -35,15 +30,15 @@ $caster = new class implements Caster {
     {
         $stdObj = new stdClass();
         $stdObj->value = $value;
+
         return $stdObj;
     }
 };
 
 it('can cast values with class to class notation', function () use ($caster) {
-
     ConsoleToolkit::addCast($caster::class, stdClass::class);
 
-    $baseCommand = new class extends Command {
+    $baseCommand = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -82,7 +77,7 @@ it('can cast values with class to class notation', function () use ($caster) {
 it('can cast values with array to class notation', function () use ($caster) {
     ConsoleToolkit::addCast($caster::class, [stdClass::class]);
 
-    $baseCommand = new class extends Command {
+    $baseCommand = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -119,8 +114,7 @@ it('can cast values with array to class notation', function () use ($caster) {
 });
 
 it('can set casts on console input ', function () {
-
-    $baseCommand = new class extends Command {
+    $baseCommand = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -158,8 +152,7 @@ it('can set casts on console input ', function () {
 });
 
 it('can set casts as object on console input ', function () {
-
-    $baseCommand = new class extends Command {
+    $baseCommand = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';

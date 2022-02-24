@@ -7,15 +7,13 @@ use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Thettler\LaravelCommandAttributeSyntax\Casts\EnumCaster;
 use Thettler\LaravelCommandAttributeSyntax\Casts\ModelCaster;
-use function Pest\Laravel\instance;
 
 class LaravelCommandAttributeSyntaxServiceProvider extends PackageServiceProvider
 {
-
     public function configurePackage(Package $package): void
     {
         ConsoleToolkit::addCast(EnumCaster::class, function (mixed $value, \ReflectionProperty $property): bool {
-            if (!$property->getType() instanceof \ReflectionNamedType) {
+            if (! $property->getType() instanceof \ReflectionNamedType) {
                 return false;
             }
 
@@ -23,7 +21,7 @@ class LaravelCommandAttributeSyntaxServiceProvider extends PackageServiceProvide
         });
 
         ConsoleToolkit::addCast(ModelCaster::class, function (mixed $value, \ReflectionProperty $property): bool {
-            if (!$property->getType() instanceof \ReflectionNamedType) {
+            if (! $property->getType() instanceof \ReflectionNamedType) {
                 return false;
             }
 

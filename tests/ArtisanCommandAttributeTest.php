@@ -12,5 +12,3 @@ it('can register command with attribute', function () {
     $this->assertTrue($command->isHidden());
     $this->assertSame(['alias:basic'], $command->getAliases());
 });
-
-

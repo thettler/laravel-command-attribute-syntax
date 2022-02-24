@@ -38,7 +38,6 @@ trait UsesAttributeSyntax
 
     public function configureDefaults(): void
     {
-
     }
 
     /**
@@ -48,13 +47,13 @@ trait UsesAttributeSyntax
      */
     protected function getArguments()
     {
-        if (!$this->reflection->usesInputAttributes()) {
+        if (! $this->reflection->usesInputAttributes()) {
             return [];
         }
 
         return $this->reflection
             ->getArguments()
-            ->map(fn(ArgumentReflection $argumentReflection) => $this->propertyToArgument($argumentReflection))
+            ->map(fn (ArgumentReflection $argumentReflection) => $this->propertyToArgument($argumentReflection))
             ->all();
     }
 
@@ -65,13 +64,13 @@ trait UsesAttributeSyntax
      */
     protected function getOptions()
     {
-        if (!$this->reflection->usesInputAttributes()) {
+        if (! $this->reflection->usesInputAttributes()) {
             return [];
         }
 
         return $this->reflection
             ->getOptions()
-            ->map(fn(OptionReflection $optionReflection) => $this->propertyToOption($optionReflection))
+            ->map(fn (OptionReflection $optionReflection) => $this->propertyToOption($optionReflection))
             ->all();
     }
 
@@ -100,7 +99,7 @@ trait UsesAttributeSyntax
             ->getOptions()
             ->each(function (OptionReflection $optionReflection) {
                 $consoleName = $optionReflection->getAlias() ?? $optionReflection->getName();
-                if (!$optionReflection->hasRequiredValue()) {
+                if (! $optionReflection->hasRequiredValue()) {
                     $this->{$optionReflection->getName()} = $optionReflection->castTo($this->option($consoleName));
 
                     return;
@@ -114,18 +113,25 @@ trait UsesAttributeSyntax
             });
     }
 
-
     protected function propertyToArgument(ArgumentReflection $argument): InputArgument
     {
         return match (true) {
-            $argument->isArray() && !$argument->isOptional() => $this->makeInputArgument($argument,
-                InputArgument::IS_ARRAY | InputArgument::REQUIRED),
+            $argument->isArray() && ! $argument->isOptional() => $this->makeInputArgument(
+                $argument,
+                InputArgument::IS_ARRAY | InputArgument::REQUIRED
+            ),
 
-            $argument->isArray() => $this->makeInputArgument($argument, InputArgument::IS_ARRAY,
-                $argument->getDefaultValue()),
+            $argument->isArray() => $this->makeInputArgument(
+                $argument,
+                InputArgument::IS_ARRAY,
+                $argument->getDefaultValue()
+            ),
 
-            $argument->isOptional() || $argument->getDefaultValue() => $this->makeInputArgument($argument,
-                InputArgument::OPTIONAL, $argument->getDefaultValue()),
+            $argument->isOptional() || $argument->getDefaultValue() => $this->makeInputArgument(
+                $argument,
+                InputArgument::OPTIONAL,
+                $argument->getDefaultValue()
+            ),
 
             default => $this->makeInputArgument($argument, InputArgument::REQUIRED),
         };
@@ -140,11 +146,16 @@ trait UsesAttributeSyntax
                 $option->getDefaultValue()
             ),
 
-            $option->hasValue() && !$option->isOptional() => $this->makeInputOption($option,
-                InputOption::VALUE_REQUIRED),
+            $option->hasValue() && ! $option->isOptional() => $this->makeInputOption(
+                $option,
+                InputOption::VALUE_REQUIRED
+            ),
 
-            $option->hasValue() => $this->makeInputOption($option, InputOption::VALUE_OPTIONAL,
-                $option->getDefaultValue()),
+            $option->hasValue() => $this->makeInputOption(
+                $option,
+                InputOption::VALUE_OPTIONAL,
+                $option->getDefaultValue()
+            ),
 
             $option->isNegatable() => $this->makeInputOption(
                 $option,
@@ -183,4 +194,3 @@ trait UsesAttributeSyntax
         );
     }
 }
-

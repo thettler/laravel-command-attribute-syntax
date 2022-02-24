@@ -5,7 +5,7 @@ use Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
 use Thettler\LaravelCommandAttributeSyntax\Concerns\UsesAttributeSyntax;
 
 it('Arguments Will Be Registered With Attribute Syntax', function () {
-    $command = new class extends Command {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -43,7 +43,7 @@ it('Arguments Will Be Registered With Attribute Syntax', function () {
 });
 
 it('Array Arguments WillBe Registered With Attribute Syntax', function () {
-    $commandRequired = new class extends Command {
+    $commandRequired = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -56,7 +56,7 @@ it('Array Arguments WillBe Registered With Attribute Syntax', function () {
         }
     };
 
-    $commandOptional = new class extends Command {
+    $commandOptional = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -69,7 +69,7 @@ it('Array Arguments WillBe Registered With Attribute Syntax', function () {
         }
     };
 
-    $commandDefault = new class extends Command {
+    $commandDefault = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -118,8 +118,7 @@ it('Array Arguments WillBe Registered With Attribute Syntax', function () {
 });
 
 it('can describe argument input', function () {
-    $command = new class extends Command
-    {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -145,4 +144,3 @@ it('can describe argument input', function () {
 
     $this->assertSame('Value', $command->argument);
 });
-

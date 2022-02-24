@@ -8,11 +8,9 @@ use Thettler\LaravelCommandAttributeSyntax\Casts\ArrayCaster;
 use Thettler\LaravelCommandAttributeSyntax\Casts\EnumCaster;
 use Thettler\LaravelCommandAttributeSyntax\Concerns\UsesAttributeSyntax;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\Enum;
-use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\IntEnum;
-use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\StringEnum;
 
 it('can cast array values', function () {
-    $command = new class extends Command {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -39,20 +37,20 @@ it('can cast array values', function () {
     expect($command->typedArray)
         ->toBeArray()
         ->sequence(
-            fn(Expectation $enum) => $enum->toEqual(Enum::C),
-            fn(Expectation $enum) => $enum->toEqual(Enum::B)
+            fn (Expectation $enum) => $enum->toEqual(Enum::C),
+            fn (Expectation $enum) => $enum->toEqual(Enum::B)
         );
 
     expect($command->typedArrayOption)
         ->toBeArray()
         ->sequence(
-            fn(Expectation $enum) => $enum->toEqual(Enum::A),
-            fn(Expectation $enum) => $enum->toEqual(Enum::C)
+            fn (Expectation $enum) => $enum->toEqual(Enum::A),
+            fn (Expectation $enum) => $enum->toEqual(Enum::C)
         );
 });
 
 it('can cast default array values', function () {
-    $command = new class extends Command {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -83,14 +81,14 @@ it('can cast default array values', function () {
     expect($command->typedDefaultArray)
         ->toBeArray()
         ->sequence(
-            fn(Expectation $enum) => $enum->toEqual(Enum::A),
-            fn(Expectation $enum) => $enum->toEqual(Enum::C)
+            fn (Expectation $enum) => $enum->toEqual(Enum::A),
+            fn (Expectation $enum) => $enum->toEqual(Enum::C)
         );
 
     expect($command->typedDefaultArrayOption)
         ->toBeArray()
         ->sequence(
-            fn(Expectation $enum) => $enum->toEqual(Enum::B),
-            fn(Expectation $enum) => $enum->toEqual(Enum::A)
+            fn (Expectation $enum) => $enum->toEqual(Enum::B),
+            fn (Expectation $enum) => $enum->toEqual(Enum::A)
         );
 });

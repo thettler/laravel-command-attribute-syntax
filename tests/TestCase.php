@@ -2,20 +2,15 @@
 
 namespace Thettler\LaravelCommandAttributeSyntax\Tests;
 
-use Illuminate\Console\Application;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Thettler\LaravelCommandAttributeSyntax\LaravelCommandAttributeSyntaxServiceProvider;
-use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Migrations\CreateBandsTable;
 
 class TestCase extends Orchestra
 {
-
     protected function getPackageProviders($app)
     {
         return [

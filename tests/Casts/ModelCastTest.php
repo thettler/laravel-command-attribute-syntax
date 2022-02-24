@@ -11,7 +11,7 @@ use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Band;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Genre;
 
 beforeEach(function () {
-    $db = new DB;
+    $db = new DB();
 
     $db->addConnection([
         'driver' => 'sqlite',
@@ -36,23 +36,23 @@ beforeEach(function () {
     });
 
     $metal = Genre::create([
-        'name' => 'Metal'
+        'name' => 'Metal',
     ]);
 
     $punk = Genre::create([
-        'name' => 'Punk Rap'
+        'name' => 'Punk Rap',
     ]);
 
     Band::create([
         'name' => 'Consvmer',
         'description' => 'Fucking nasty breakdowns and low growls',
-        'genre_id' => $metal->id
+        'genre_id' => $metal->id,
     ]);
 
     Band::create([
         'name' => 'KAFVKA',
         'description' => 'FCK AFD. Alle hassen Nazis!',
-        'genre_id' => $punk->id
+        'genre_id' => $punk->id,
     ]);
 });
 
@@ -61,7 +61,7 @@ afterEach(function () {
 });
 
 it('can cast eloquent models', function () {
-    $command = new class extends Command {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -96,7 +96,7 @@ it('can cast eloquent models', function () {
 });
 
 it('can cast eloquent models with default', function () {
-    $command = new class extends Command {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -132,7 +132,7 @@ it('can cast eloquent models with default', function () {
 });
 
 it('can cast with custom column', function () {
-    $command = new class extends Command {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -160,8 +160,7 @@ it('can cast with custom column', function () {
 });
 
 it('can cast with custom column with default', function () {
-
-    $command = new class extends Command {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -192,8 +191,7 @@ it('can cast with custom column with default', function () {
 });
 
 it('can cast with specific column selects', function () {
-
-    $command = new class extends Command {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -225,8 +223,7 @@ it('can cast with specific column selects', function () {
 });
 
 it('can cast with relations', function () {
-
-    $command = new class extends Command {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';

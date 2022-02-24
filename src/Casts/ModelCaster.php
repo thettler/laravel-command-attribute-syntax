@@ -6,7 +6,6 @@ use Thettler\LaravelCommandAttributeSyntax\Contracts\Caster;
 
 class ModelCaster implements Caster
 {
-
     public function __construct(
         protected ?string $findBy = null,
         protected array $select = ['*'],
@@ -21,7 +20,7 @@ class ModelCaster implements Caster
 
     public function to(mixed $value, string $type, \ReflectionProperty $property)
     {
-        if (!$property->getType() instanceof \ReflectionNamedType) {
+        if (! $property->getType() instanceof \ReflectionNamedType) {
             return $value;
         }
 
@@ -31,5 +30,4 @@ class ModelCaster implements Caster
             ->with($this->with)
             ->first($this->select);
     }
-
 }

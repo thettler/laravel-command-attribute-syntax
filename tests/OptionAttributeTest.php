@@ -1,13 +1,11 @@
 <?php
 
-use Illuminate\Console\Attributes\Argument;
 use Illuminate\Console\Command;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Option;
 use Thettler\LaravelCommandAttributeSyntax\Concerns\UsesAttributeSyntax;
 
-it('Options Will Be Registered With Attribute Syntax', function (){
-    $baseCommand = new class extends Command
-    {
+it('Options Will Be Registered With Attribute Syntax', function () {
+    $baseCommand = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -59,8 +57,7 @@ it('Options Will Be Registered With Attribute Syntax', function (){
 });
 
 it('Array Options Will Be Registered With Attribute Syntax', function () {
-    $command = new class extends Command
-    {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -100,8 +97,7 @@ it('Array Options Will Be Registered With Attribute Syntax', function () {
 });
 
 it('can describe option input', function () {
-    $command = new class extends Command
-    {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -129,8 +125,7 @@ it('can describe option input', function () {
 });
 
 it('can use a option shortcut', function () {
-    $command = new class extends Command
-    {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -157,8 +152,7 @@ it('can use a option shortcut', function () {
 });
 
 it('can use a negatable option', function () {
-    $command = new class extends Command
-    {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';

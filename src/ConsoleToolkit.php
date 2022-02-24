@@ -16,10 +16,8 @@ class ConsoleToolkit
      */
     public static function addCast(string $caster, array|string|callable $matches): void
     {
-
         static::$casts[$caster] = $matches;
     }
-
 
     /**
      * @param array<class-string, class-string | callable(mixed, \ReflectionType): bool | array<class-string>>  $caster

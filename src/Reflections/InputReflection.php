@@ -17,11 +17,11 @@ abstract class InputReflection
         protected ConsoleInput $consoleInput,
         protected Command $command
     ) {
-        if (!($type = $this->property->getType())) {
+        if (! ($type = $this->property->getType())) {
             throw new InvalidTypeException("A type is required for the console input \"{$this->property->getName()}\".");
         }
 
-        if (!$type instanceof \ReflectionNamedType) {
+        if (! $type instanceof \ReflectionNamedType) {
             throw new InvalidTypeException("Only named types can be used for the console input \"{$this->property->getName()}\".");
         }
 
@@ -74,7 +74,7 @@ abstract class InputReflection
 
         $caster = $this->getCaster($value, $this->property);
 
-        if (!$caster) {
+        if (! $caster) {
             return $value;
         }
 
@@ -94,7 +94,7 @@ abstract class InputReflection
     {
         $caster = $this->getCaster($value, $this->property);
 
-        if (!$caster) {
+        if (! $caster) {
             return $value;
         }
 
@@ -103,7 +103,7 @@ abstract class InputReflection
 
     protected function getCaster(mixed $value, \ReflectionProperty $property): ?Caster
     {
-        if ($cast = $this->consoleInput->getCast()){
+        if ($cast = $this->consoleInput->getCast()) {
             return is_string($cast) ? app()->make($cast) : $cast;
         }
 
@@ -117,7 +117,7 @@ abstract class InputReflection
                     return $matcher === $this->type;
                 }
 
-                if (!is_array($matcher)) {
+                if (! is_array($matcher)) {
                     return false;
                 }
 
@@ -125,6 +125,7 @@ abstract class InputReflection
                     if ($match !== $this->type) {
                         continue;
                     }
+
                     return true;
                 }
 
@@ -134,7 +135,7 @@ abstract class InputReflection
             ->first();
 
 
-        if (!$casterString) {
+        if (! $casterString) {
             return null;
         }
 
