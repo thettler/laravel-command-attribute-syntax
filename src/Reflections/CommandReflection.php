@@ -10,6 +10,7 @@ use Thettler\LaravelCommandAttributeSyntax\Attributes\Option;
 
 class CommandReflection
 {
+    /** @var \ReflectionClass<Command> */
     public \ReflectionClass $reflection;
     public ?ArtisanCommand $attribute;
 
@@ -62,7 +63,7 @@ class CommandReflection
 
     public function getName(): ?string
     {
-        if (! $this->usesCommandAttribute()) {
+        if (! $this->attribute) {
             return $this->command->getName();
         }
 
@@ -71,7 +72,7 @@ class CommandReflection
 
     public function getDescription(): string
     {
-        if (! $this->usesCommandAttribute()) {
+        if (! $this->attribute) {
             return $this->command->getDescription();
         }
 
@@ -80,7 +81,7 @@ class CommandReflection
 
     public function getHelp(): string
     {
-        if (! $this->usesCommandAttribute()) {
+        if (! $this->attribute) {
             return $this->command->getHelp();
         }
 
@@ -89,7 +90,7 @@ class CommandReflection
 
     public function isHidden(): bool
     {
-        if (! $this->usesCommandAttribute()) {
+        if (! $this->attribute) {
             return $this->command->isHidden();
         }
 
@@ -98,7 +99,7 @@ class CommandReflection
 
     public function getAliases(): array
     {
-        if (! $this->usesCommandAttribute()) {
+        if (! $this->attribute) {
             return [];
         }
 

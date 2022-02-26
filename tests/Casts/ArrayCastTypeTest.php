@@ -18,12 +18,18 @@ it('can cast array values', function () {
         protected $name = 'test';
 
         #[Argument(
-            cast: new ArrayCaster(new EnumCaster(Enum::class))
+            cast: new ArrayCaster(
+                caster: new EnumCaster(),
+                type: Enum::class
+            )
         )]
         public array $typedArray;
 
         #[Option(
-            cast: new ArrayCaster(new EnumCaster(Enum::class))
+            cast: new ArrayCaster(
+                caster: new EnumCaster(),
+                type: Enum::class,
+            )
         )]
         public array $typedArrayOption;
 
@@ -59,7 +65,7 @@ it('can cast default array values', function () {
 
         #[Argument(
             cast: new ArrayCaster(
-                caster: new EnumCaster(),
+                caster: EnumCaster::class,
                 type: Enum::class
             )
         )]
@@ -67,7 +73,7 @@ it('can cast default array values', function () {
 
         #[Option(
             cast: new ArrayCaster(
-                caster: new EnumCaster(),
+                caster: EnumCaster::class,
                 type: Enum::class
             )
         )]

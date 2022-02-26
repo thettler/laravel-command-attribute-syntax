@@ -8,10 +8,19 @@ use Thettler\LaravelCommandAttributeSyntax\Contracts\Caster;
 use Thettler\LaravelCommandAttributeSyntax\Contracts\ConsoleInput;
 use Thettler\LaravelCommandAttributeSyntax\Exception\InvalidTypeException;
 
+/**
+ * @template T of ConsoleInput
+ */
 abstract class InputReflection
 {
     protected string $type;
 
+    /**
+     * @param  \ReflectionProperty  $property
+     * @param  T $consoleInput
+     * @param  Command  $command
+     * @throws InvalidTypeException
+     */
     public function __construct(
         protected \ReflectionProperty $property,
         protected ConsoleInput $consoleInput,
@@ -78,16 +87,7 @@ abstract class InputReflection
             return $value;
         }
 
-
-
         return $caster->from($value, $this->type, $this->property);
-    }
-
-    public function castEnum(object $value): int|float|array|string|bool|null
-    {
-        return (new \ReflectionEnum($value))->isBacked()
-            ? $value->value
-            : $value->name;
     }
 
     public function castTo(int|array|float|string|bool|null $value): mixed

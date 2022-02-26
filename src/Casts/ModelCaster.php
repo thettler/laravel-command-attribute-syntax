@@ -2,6 +2,7 @@
 
 namespace Thettler\LaravelCommandAttributeSyntax\Casts;
 
+use Illuminate\Database\Eloquent\Model;
 use Thettler\LaravelCommandAttributeSyntax\Contracts\Caster;
 
 class ModelCaster implements Caster
@@ -19,15 +20,15 @@ class ModelCaster implements Caster
         return $this->findBy ? $value->{$this->findBy} : $value->getKey();
     }
 
+    /**
+     * @param  mixed  $value
+     * @param  class-string<Model>  $type
+     * @param  \ReflectionProperty  $property
+     * @return mixed
+     */
     public function to(mixed $value, string $type, \ReflectionProperty $property)
     {
-        if (!$property->getType() instanceof \ReflectionNamedType) {
-            return $value;
-        }
-
-        $modelName = $property->getType()->getName();
-
-        return $modelName::where($this->findBy ?? (new $modelName())->getKeyName(), '=', $value)
+        return $type::where($this->findBy ?? (new $type())->getKeyName(), '=', $value)
             ->with($this->with)
             ->first($this->select);
     }

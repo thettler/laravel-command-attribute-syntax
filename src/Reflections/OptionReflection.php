@@ -5,6 +5,9 @@ namespace Thettler\LaravelCommandAttributeSyntax\Reflections;
 use Illuminate\Console\Command;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Option;
 
+/**
+ * @extends InputReflection<Option>
+ */
 class OptionReflection extends InputReflection
 {
     public function __construct(\ReflectionProperty $property, Option $consoleInput, Command $commandReflection)

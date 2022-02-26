@@ -4,25 +4,28 @@ namespace Thettler\LaravelCommandAttributeSyntax;
 
 use Thettler\LaravelCommandAttributeSyntax\Contracts\Caster;
 
+/**
+ * @phpstan-type CasterConfigKey class-string<Caster>
+ * @phpstan-type CasterConfigValue class-string | callable(mixed, \ReflectionProperty): bool | array<class-string>
+ */
 class ConsoleToolkit
 {
-    /** @var array<class-string, class-string | callable(mixed, \ReflectionType): bool | array<class-string>> */
+    /** @var array<CasterConfigKey, CasterConfigValue> */
     public static array $casts = [];
 
     /**
-     * @param  class-string<Caster>  $caster
-     * @param  class-string|array<class-string>|callable(mixed, \ReflectionType): bool  $caster
+     * @param  CasterConfigKey  $caster
+     * @param  CasterConfigValue $matches
      * @return void
      */
     public static function addCast(string $caster, array|string|callable $matches): void
     {
-
         static::$casts[$caster] = $matches;
     }
 
 
     /**
-     * @param array<class-string, class-string | callable(mixed, \ReflectionType): bool | array<class-string>>  $caster
+     * @param array<CasterConfigKey, CasterConfigValue>  $caster
      * @return void
      */
     public static function setCast(array $caster): void
