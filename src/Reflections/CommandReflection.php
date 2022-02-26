@@ -40,7 +40,8 @@ class CommandReflection
     {
         return collect($this->reflection->getProperties())
             ->filter(fn (\ReflectionProperty $property) => ArgumentReflection::isArgument($property))
-            ->map(fn (\ReflectionProperty $property) => new ArgumentReflection(
+            ->map(
+                fn (\ReflectionProperty $property) => new ArgumentReflection(
                 $property,
                 $property->getAttributes(Argument::class)[0]->newInstance(),
                 $this->command,
@@ -50,10 +51,10 @@ class CommandReflection
 
     public function getOptions(): Collection
     {
-
         return collect($this->reflection->getProperties())
             ->filter(fn (\ReflectionProperty $property) => OptionReflection::isOption($property))
-            ->map(fn (\ReflectionProperty $property) => new OptionReflection(
+            ->map(
+                fn (\ReflectionProperty $property) => new OptionReflection(
                 $property,
                 $property->getAttributes(Option::class)[0]->newInstance(),
                 $this->command,

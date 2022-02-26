@@ -25,11 +25,11 @@ class EnumCaster implements Caster
     {
         $enumName = $this->getEnumName($type);
 
-        if (!$enumName) {
+        if (! $enumName) {
             return $value;
         }
 
-        if (!enum_exists($enumName)) {
+        if (! enum_exists($enumName)) {
             return $value;
         }
 

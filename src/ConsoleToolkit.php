@@ -23,7 +23,6 @@ class ConsoleToolkit
         static::$casts[$caster] = $matches;
     }
 
-
     /**
      * @param array<CasterConfigKey, CasterConfigValue>  $caster
      * @return void

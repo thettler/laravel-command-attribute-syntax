@@ -2,7 +2,6 @@
 
 namespace Thettler\LaravelCommandAttributeSyntax\Attributes;
 
-use Carbon\Traits\Cast;
 use Thettler\LaravelCommandAttributeSyntax\Contracts\Caster;
 use Thettler\LaravelCommandAttributeSyntax\Contracts\ConsoleInput;
 

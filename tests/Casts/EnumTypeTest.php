@@ -9,8 +9,7 @@ use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\IntEnum;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\StringEnum;
 
 it('can cast enums to arguments', function () {
-    $command = new class extends Command
-    {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
@@ -48,8 +47,7 @@ it('can cast enums to arguments', function () {
 });
 
 it('can cast enums to options', function () {
-    $command = new class extends Command
-    {
+    $command = new class () extends Command {
         use UsesAttributeSyntax;
 
         protected $name = 'test';
