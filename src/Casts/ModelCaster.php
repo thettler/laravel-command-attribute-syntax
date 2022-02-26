@@ -7,7 +7,6 @@ use Thettler\LaravelCommandAttributeSyntax\Contracts\Caster;
 
 class ModelCaster implements Caster
 {
-
     public function __construct(
         protected ?string $findBy = null,
         protected array $select = ['*'],
@@ -32,5 +31,4 @@ class ModelCaster implements Caster
             ->with($this->with)
             ->first($this->select);
     }
-
 }

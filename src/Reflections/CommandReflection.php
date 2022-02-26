@@ -42,10 +42,10 @@ class CommandReflection
             ->filter(fn (\ReflectionProperty $property) => ArgumentReflection::isArgument($property))
             ->map(
                 fn (\ReflectionProperty $property) => new ArgumentReflection(
-                $property,
-                $property->getAttributes(Argument::class)[0]->newInstance(),
-                $this->command,
-            )
+                    $property,
+                    $property->getAttributes(Argument::class)[0]->newInstance(),
+                    $this->command,
+                )
             );
     }
 
@@ -55,10 +55,10 @@ class CommandReflection
             ->filter(fn (\ReflectionProperty $property) => OptionReflection::isOption($property))
             ->map(
                 fn (\ReflectionProperty $property) => new OptionReflection(
-                $property,
-                $property->getAttributes(Option::class)[0]->newInstance(),
-                $this->command,
-            )
+                    $property,
+                    $property->getAttributes(Option::class)[0]->newInstance(),
+                    $this->command,
+                )
             );
     }
 

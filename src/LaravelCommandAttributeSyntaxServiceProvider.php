@@ -11,32 +11,31 @@ use Thettler\LaravelCommandAttributeSyntax\Casts\ModelCaster;
 
 class LaravelCommandAttributeSyntaxServiceProvider extends PackageServiceProvider
 {
-
     public function configurePackage(Package $package): void
     {
-
         $package->name('laravel-command-attribute-syntax');
 
 
         ConsoleToolkit::addCast(
             EnumCaster::class,
             function (mixed $value, ReflectionProperty $property): bool {
-                if (!$property->getType() instanceof \ReflectionNamedType) {
+                if (! $property->getType() instanceof \ReflectionNamedType) {
                     return false;
                 }
 
                 return enum_exists($property->getType()->getName());
-            });
+            }
+        );
 
         ConsoleToolkit::addCast(
             ModelCaster::class,
             function (mixed $value, ReflectionProperty $property): bool {
-            if (!$property->getType() instanceof \ReflectionNamedType) {
-                return false;
+                if (! $property->getType() instanceof \ReflectionNamedType) {
+                    return false;
+                }
+
+                return is_subclass_of($property->getType()->getName(), Model::class);
             }
-
-            return is_subclass_of($property->getType()->getName(), Model::class);
-        });
-
+        );
     }
 }

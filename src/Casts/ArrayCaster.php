@@ -3,7 +3,6 @@
 namespace Thettler\LaravelCommandAttributeSyntax\Casts;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Thettler\LaravelCommandAttributeSyntax\Contracts\Caster;
 
 class ArrayCaster implements Caster
@@ -26,6 +25,7 @@ class ArrayCaster implements Caster
     public function from(mixed $value, string $type, \ReflectionProperty $property): int|float|array|string|bool|null
     {
         $value = Arr::wrap($value);
+
         return collect($value)
             ->map(function (mixed $item) use ($property) {
                 return $this->getItemCaster()->from($item, $this->type, $property);
@@ -36,8 +36,9 @@ class ArrayCaster implements Caster
     public function to(mixed $value, string $type, \ReflectionProperty $property)
     {
         $value = Arr::wrap($value);
+
         return collect($value)
-            ->map(fn($item) => $this->getItemCaster()->to($item, $this->type, $property))
+            ->map(fn ($item) => $this->getItemCaster()->to($item, $this->type, $property))
             ->all();
     }
 
