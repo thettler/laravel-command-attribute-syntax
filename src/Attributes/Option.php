@@ -4,6 +4,7 @@ namespace Thettler\LaravelCommandAttributeSyntax\Attributes;
 
 use Thettler\LaravelCommandAttributeSyntax\Contracts\Caster;
 use Thettler\LaravelCommandAttributeSyntax\Contracts\ConsoleInput;
+use Thettler\LaravelCommandAttributeSyntax\Transfers\Validation;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 class Option implements ConsoleInput
@@ -21,6 +22,7 @@ class Option implements ConsoleInput
         protected null|Caster|string $cast = null,
         protected ?string $shortcut = null,
         protected bool $negatable = false,
+        protected null|string|array|Validation $validation = null,
     ) {
     }
 
@@ -47,5 +49,10 @@ class Option implements ConsoleInput
     public function getCast(): null|Caster|string
     {
         return $this->cast;
+    }
+
+    public function getValidation(): null|array|string|Validation
+    {
+        return $this->validation;
     }
 }

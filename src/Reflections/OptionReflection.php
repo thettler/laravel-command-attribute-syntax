@@ -4,6 +4,7 @@ namespace Thettler\LaravelCommandAttributeSyntax\Reflections;
 
 use Illuminate\Console\Command;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Option;
+use Thettler\LaravelCommandAttributeSyntax\Enums\ConsoleInputType;
 
 /**
  * @extends InputReflection<Option>
@@ -42,5 +43,10 @@ class OptionReflection extends InputReflection
         }
 
         return false;
+    }
+
+    public static function inputType(): ConsoleInputType
+    {
+        return ConsoleInputType::Option;
     }
 }

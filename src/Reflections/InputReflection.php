@@ -3,10 +3,14 @@
 namespace Thettler\LaravelCommandAttributeSyntax\Reflections;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 use Thettler\LaravelCommandAttributeSyntax\ConsoleToolkit;
 use Thettler\LaravelCommandAttributeSyntax\Contracts\Caster;
 use Thettler\LaravelCommandAttributeSyntax\Contracts\ConsoleInput;
-use Thettler\LaravelCommandAttributeSyntax\Exception\InvalidTypeException;
+use Thettler\LaravelCommandAttributeSyntax\Enums\ConsoleInputType;
+use Thettler\LaravelCommandAttributeSyntax\Exceptions\InvalidTypeException;
+use Thettler\LaravelCommandAttributeSyntax\Rules\Enum;
+use Thettler\LaravelCommandAttributeSyntax\Transfers\Validation;
 
 /**
  * @template T of ConsoleInput
@@ -17,7 +21,7 @@ abstract class InputReflection
 
     /**
      * @param  \ReflectionProperty  $property
-     * @param  T $consoleInput
+     * @param  T  $consoleInput
      * @param  Command  $command
      * @throws InvalidTypeException
      */
@@ -26,16 +30,18 @@ abstract class InputReflection
         protected ConsoleInput $consoleInput,
         protected Command $command
     ) {
-        if (! ($type = $this->property->getType())) {
+        if (!($type = $this->property->getType())) {
             throw new InvalidTypeException("A type is required for the console input \"{$this->property->getName()}\".");
         }
 
-        if (! $type instanceof \ReflectionNamedType) {
+        if (!$type instanceof \ReflectionNamedType) {
             throw new InvalidTypeException("Only named types can be used for the console input \"{$this->property->getName()}\".");
         }
 
         $this->type = $type;
     }
+
+    abstract public static function inputType(): ConsoleInputType;
 
     public function getName(): string
     {
@@ -45,6 +51,37 @@ abstract class InputReflection
     public function getAlias(): ?string
     {
         return $this->consoleInput->getAlias();
+    }
+
+    public function getValidationRules():  array|string
+    {
+        $autoRules = [];
+
+        if (enum_exists($this->type)) {
+            $autoRules[] = new Enum($this->type);
+        }
+
+        $rules = $this->consoleInput->getValidation() instanceof Validation
+            ? $this->consoleInput->getValidation()->rules
+            : $this->consoleInput->getValidation();
+
+        return [...$autoRules, ...Arr::wrap($rules)];
+    }
+
+    public function getValidationMessage(): null|array
+    {
+        return $this->consoleInput->getValidation() instanceof Validation
+            ? $this->consoleInput->getValidation()->messages
+            : null;
+    }
+
+    public function getChoices(): array
+    {
+        if (enum_exists($this->type)) {
+            return array_map(fn(object $enum) => $enum?->value ?? $enum->name, $this->type::cases());
+        }
+
+        return [];
     }
 
     public function getDescription(): string
@@ -83,7 +120,7 @@ abstract class InputReflection
 
         $caster = $this->getCaster($value, $this->property);
 
-        if (! $caster) {
+        if (!$caster) {
             return $value;
         }
 
@@ -94,7 +131,7 @@ abstract class InputReflection
     {
         $caster = $this->getCaster($value, $this->property);
 
-        if (! $caster) {
+        if (!$caster) {
             return $value;
         }
 
@@ -117,7 +154,7 @@ abstract class InputReflection
                     return $matcher === $this->type;
                 }
 
-                if (! is_array($matcher)) {
+                if (!is_array($matcher)) {
                     return false;
                 }
 
@@ -135,7 +172,7 @@ abstract class InputReflection
             ->first();
 
 
-        if (! $casterString) {
+        if (!$casterString) {
             return null;
         }
 

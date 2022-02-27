@@ -3,7 +3,7 @@
 use Illuminate\Console\Command;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
 use Thettler\LaravelCommandAttributeSyntax\Concerns\UsesAttributeSyntax;
-use Thettler\LaravelCommandAttributeSyntax\Exception\InvalidTypeException;
+use Thettler\LaravelCommandAttributeSyntax\Exceptions\InvalidTypeException;
 
 it('Inputs need an type', function () {
     $command = new class () extends Command {
