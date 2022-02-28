@@ -35,29 +35,28 @@ trait UsesInputValidation
             $messages
         );
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             return $collection;
         }
 
-        $inputErrors = $collection->mapWithKeys(fn(InputReflection $reflection) => [
+        $inputErrors = $collection->mapWithKeys(fn (InputReflection $reflection) => [
             $reflection->getName() => new InputErrorData(
                 key: $reflection->getName(),
                 choices: $choices[$reflection->getName()] ?? [],
                 reflection: $reflection,
                 hasAutoAsk: $this->hasAutoAskEnabled($reflection),
-            )
+            ),
         ])->all();
 
         throw new ValidationException($validator, $inputErrors);
     }
-
 
     /**
      * @return array{values:mixed, rules:null|string|array, messages: array}
      */
     protected function extractValidationData(Collection $collection): array
     {
-        return $collection->reduce(fn(array $carry, InputReflection $reflection) => [
+        return $collection->reduce(fn (array $carry, InputReflection $reflection) => [
             'values' => [...$carry['values'], ...$this->extractInputValues($reflection)],
             'rules' => [...$carry['rules'], ...$this->extractInputRules($reflection)],
             'messages' => [...$carry['messages'], ...$this->extractValidationMessages($reflection)],
@@ -72,15 +71,14 @@ trait UsesInputValidation
 
     protected function extractValidationMessages(InputReflection $reflection): array
     {
-        if (!$reflection->getValidationMessage()) {
+        if (! $reflection->getValidationMessage()) {
             return [];
         }
 
         return collect($reflection->getValidationMessage())
-            ->mapWithKeys(fn(string $value, string $key) => ["{$reflection->getName()}.{$key}" => $value])
+            ->mapWithKeys(fn (string $value, string $key) => ["{$reflection->getName()}.{$key}" => $value])
             ->all();
     }
-
 
     protected function extractInputValues(
         InputReflection $reflection
@@ -91,7 +89,7 @@ trait UsesInputValidation
             $reflection->getName() => match ($reflection::inputType()) {
                 ConsoleInputType::Argument => $this->argument($inputName),
                 ConsoleInputType::Option => $this->option($inputName),
-            }
+            },
         ];
     }
 
@@ -100,7 +98,7 @@ trait UsesInputValidation
     ): array {
         $rules = [];
 
-        if ($this->hasAutoAskEnabled($reflection) && !$reflection->isArray()) {
+        if ($this->hasAutoAskEnabled($reflection) && ! $reflection->isArray()) {
             $rules[] = 'required';
         }
 

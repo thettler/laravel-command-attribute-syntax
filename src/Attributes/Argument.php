@@ -44,7 +44,6 @@ class Argument implements ConsoleInput
         return $this->autoAsk;
     }
 
-
     public function getValidation(): null|array|string|Validation
     {
         return $this->validation;

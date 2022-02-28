@@ -3,7 +3,6 @@
 namespace Thettler\LaravelCommandAttributeSyntax\Concerns;
 
 use Illuminate\Support\Collection;
-use Illuminate\Validation\Validator;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -54,13 +53,13 @@ trait UsesAttributeSyntax
      */
     protected function getArguments()
     {
-        if (!$this->reflection->usesInputAttributes()) {
+        if (! $this->reflection->usesInputAttributes()) {
             return [];
         }
 
         return $this->reflection
             ->getArguments()
-            ->map(fn(ArgumentReflection $argumentReflection) => $this->propertyToArgument($argumentReflection))
+            ->map(fn (ArgumentReflection $argumentReflection) => $this->propertyToArgument($argumentReflection))
             ->all();
     }
 
@@ -71,20 +70,20 @@ trait UsesAttributeSyntax
      */
     protected function getOptions()
     {
-        if (!$this->reflection->usesInputAttributes()) {
+        if (! $this->reflection->usesInputAttributes()) {
             return [];
         }
 
         return $this->reflection
             ->getOptions()
-            ->map(fn(OptionReflection $optionReflection) => $this->propertyToOption($optionReflection))
+            ->map(fn (OptionReflection $optionReflection) => $this->propertyToOption($optionReflection))
             ->all();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $hasErrors = !$this->errorHandling(fn() => $this->hydrateArguments());
-        $hasErrors = !$this->errorHandling(fn() => $this->hydrateOptions()) || $hasErrors;
+        $hasErrors = ! $this->errorHandling(fn () => $this->hydrateArguments());
+        $hasErrors = ! $this->errorHandling(fn () => $this->hydrateOptions()) || $hasErrors;
 
         if ($hasErrors) {
             return SymfonyCommand::FAILURE;
@@ -97,6 +96,7 @@ trait UsesAttributeSyntax
     {
         try {
             $callable();
+
             return true;
         } catch (ValidationException $validationException) {
             $rerun = false;
@@ -107,7 +107,7 @@ trait UsesAttributeSyntax
                 $this->renderValidationErrors($inputErrorData, $errors);
 
                 if ($inputErrorData->hasAutoAsk) {
-                    $answer = !empty($inputErrorData->choices)
+                    $answer = ! empty($inputErrorData->choices)
                         ? $this->renderAutoAskChoice($inputErrorData)
                         : $this->renderAutoAsk($inputErrorData);
 
@@ -117,10 +117,11 @@ trait UsesAttributeSyntax
                     };
 
                     $rerun = true;
+
                     continue;
                 }
 
-                if (!empty($inputErrorData->choices)) {
+                if (! empty($inputErrorData->choices)) {
                     $this->renderChoiceOptions($inputErrorData);
                 }
             }
@@ -138,7 +139,7 @@ trait UsesAttributeSyntax
         $this->reflection
             ->getArguments()
             ->pipeThrough(
-                fn(Collection $collection) => $this->validate($collection),
+                fn (Collection $collection) => $this->validate($collection),
             )
             ->each(function (ArgumentReflection $argumentReflection) {
                 $this->{$argumentReflection->getName()} = $argumentReflection->castTo(
@@ -151,10 +152,10 @@ trait UsesAttributeSyntax
     {
         $this->reflection
             ->getOptions()
-            ->pipeThrough(fn(Collection $collection) => $this->validate($collection))
+            ->pipeThrough(fn (Collection $collection) => $this->validate($collection))
             ->each(function (OptionReflection $optionReflection) {
                 $consoleName = $optionReflection->getAlias() ?? $optionReflection->getName();
-                if (!$optionReflection->hasRequiredValue()) {
+                if (! $optionReflection->hasRequiredValue()) {
                     $this->{$optionReflection->getName()} = $optionReflection->castTo($this->option($consoleName));
 
                     return;
@@ -171,7 +172,7 @@ trait UsesAttributeSyntax
     protected function propertyToArgument(ArgumentReflection $argument): InputArgument
     {
         return match (true) {
-            $argument->isArray() && !$argument->isOptional() => $this->makeInputArgument(
+            $argument->isArray() && ! $argument->isOptional() => $this->makeInputArgument(
                 $argument,
                 $argument->isAutoAskEnabled() ? InputArgument::IS_ARRAY | InputArgument::OPTIONAL : InputArgument::IS_ARRAY | InputArgument::REQUIRED
             ),
@@ -188,8 +189,10 @@ trait UsesAttributeSyntax
                 $argument->getDefaultValue()
             ),
 
-            default => $this->makeInputArgument($argument,
-                $argument->isAutoAskEnabled() ? InputArgument::OPTIONAL : InputArgument::REQUIRED),
+            default => $this->makeInputArgument(
+                $argument,
+                $argument->isAutoAskEnabled() ? InputArgument::OPTIONAL : InputArgument::REQUIRED
+            ),
         };
     }
 
@@ -264,7 +267,6 @@ trait UsesAttributeSyntax
     {
         return $this->ask('Please enter "'.$inputErrorData->key.'"');
     }
-
 
     protected function renderAutoAskChoice(InputErrorData $inputErrorData): string|array
     {

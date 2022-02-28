@@ -2,9 +2,6 @@
 
 namespace Thettler\LaravelCommandAttributeSyntax\Transfers;
 
-use Illuminate\Support\Collection;
-use Symfony\Component\Console\Input\Input;
-use Thettler\LaravelCommandAttributeSyntax\Enums\ConsoleInputType;
 use Thettler\LaravelCommandAttributeSyntax\Reflections\InputReflection;
 
 class InputErrorData

@@ -1,16 +1,16 @@
 <?php
 
+use Illuminate\Console\Application as Artisan;
 use Illuminate\Console\Command;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Option;
 use Thettler\LaravelCommandAttributeSyntax\Concerns\UsesAttributeSyntax;
-use Illuminate\Console\Application as Artisan;
 use Thettler\LaravelCommandAttributeSyntax\ConsoleToolkit;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\Enum;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\StringEnum;
 use Thettler\LaravelCommandAttributeSyntax\Transfers\Validation;
 
-it('can add validation to console inputs', function ()  {
+it('can add validation to console inputs', function () {
     ConsoleToolkit::enableAutoAsk(false);
 
     $command = new class () extends Command {
@@ -34,7 +34,7 @@ it('can add validation to console inputs', function ()  {
         }
     };
 
-    Artisan::starting(fn(Artisan $artisan) => $artisan->add($command));
+    Artisan::starting(fn (Artisan $artisan) => $artisan->add($command));
 
     \Pest\Laravel\artisan('validate LongerThan5 --shortOption=alsoLonger')
         ->expectsOutput('The short argument must not be greater than 5 characters.')
@@ -43,7 +43,7 @@ it('can add validation to console inputs', function ()  {
         ->assertFailed();
 });
 
-it('can sets automatic enum rules', function ()  {
+it('can sets automatic enum rules', function () {
     ConsoleToolkit::enableAutoAsk(false);
 
     $command = new class () extends Command {
@@ -63,7 +63,7 @@ it('can sets automatic enum rules', function ()  {
         }
     };
 
-    Artisan::starting(fn(Artisan $artisan) => $artisan->add($command));
+    Artisan::starting(fn (Artisan $artisan) => $artisan->add($command));
 
     \Pest\Laravel\artisan('validate notValid --O=notValid')
         ->expectsOutput('The selected a is invalid.')
@@ -79,7 +79,7 @@ it('can sets automatic enum rules', function ()  {
         ->assertFailed();
 });
 
-it('can add custom validation messages', function ()  {
+it('can add custom validation messages', function () {
     ConsoleToolkit::enableAutoAsk(false);
 
     $command = new class () extends Command {
@@ -109,7 +109,7 @@ it('can add custom validation messages', function ()  {
         }
     };
 
-    Artisan::starting(fn(Artisan $artisan) => $artisan->add($command));
+    Artisan::starting(fn (Artisan $artisan) => $artisan->add($command));
 
     \Pest\Laravel\artisan('validate LongerThan5 --shortOption=alsoLonger')
         ->expectsOutput('This argument short argument is to long for you boy.')

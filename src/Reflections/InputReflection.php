@@ -30,11 +30,11 @@ abstract class InputReflection
         protected ConsoleInput $consoleInput,
         protected Command $command
     ) {
-        if (!($type = $this->property->getType())) {
+        if (! ($type = $this->property->getType())) {
             throw new InvalidTypeException("A type is required for the console input \"{$this->property->getName()}\".");
         }
 
-        if (!$type instanceof \ReflectionNamedType) {
+        if (! $type instanceof \ReflectionNamedType) {
             throw new InvalidTypeException("Only named types can be used for the console input \"{$this->property->getName()}\".");
         }
 
@@ -77,12 +77,12 @@ abstract class InputReflection
 
     public function getChoices(): array
     {
-        if (!enum_exists($this->type)) {
+        if (! enum_exists($this->type)) {
             return [];
         }
 
         return array_map(
-            fn(\UnitEnum|\BackedEnum $enum) => $enum instanceof \BackedEnum ? $enum->value : $enum->name,
+            fn (\UnitEnum|\BackedEnum $enum) => $enum instanceof \BackedEnum ? $enum->value : $enum->name,
             $this->type::cases()
         );
     }
@@ -132,7 +132,7 @@ abstract class InputReflection
 
         $caster = $this->getCaster($value, $this->property);
 
-        if (!$caster) {
+        if (! $caster) {
             return $value;
         }
 
@@ -143,7 +143,7 @@ abstract class InputReflection
     {
         $caster = $this->getCaster($value, $this->property);
 
-        if (!$caster) {
+        if (! $caster) {
             return $value;
         }
 
@@ -166,7 +166,7 @@ abstract class InputReflection
                     return $matcher === $this->type;
                 }
 
-                if (!is_array($matcher)) {
+                if (! is_array($matcher)) {
                     return false;
                 }
 
@@ -184,7 +184,7 @@ abstract class InputReflection
             ->first();
 
 
-        if (!$casterString) {
+        if (! $casterString) {
             return null;
         }
 

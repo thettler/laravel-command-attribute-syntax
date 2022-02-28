@@ -6,7 +6,6 @@ use Thettler\LaravelCommandAttributeSyntax\Concerns\UsesAttributeSyntax;
 use Thettler\LaravelCommandAttributeSyntax\ConsoleToolkit;
 
 it('Options Will Be Registered With Attribute Syntax', function () {
-
     ConsoleToolkit::enableAutoAsk(false);
 
     $baseCommand = new class () extends Command {

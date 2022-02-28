@@ -1,14 +1,12 @@
 <?php
 
+use Illuminate\Console\Application as Artisan;
 use Illuminate\Console\Command;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Option;
 use Thettler\LaravelCommandAttributeSyntax\Concerns\UsesAttributeSyntax;
-use Illuminate\Console\Application as Artisan;
-use Thettler\LaravelCommandAttributeSyntax\ConsoleToolkit;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\Enum;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\StringEnum;
-use Thettler\LaravelCommandAttributeSyntax\Transfers\Validation;
 
 it('can ask automatically if value is missing', function () {
     $command = new class () extends Command {
@@ -28,7 +26,7 @@ it('can ask automatically if value is missing', function () {
         }
     };
 
-    Artisan::starting(fn(Artisan $artisan) => $artisan->add($command));
+    Artisan::starting(fn (Artisan $artisan) => $artisan->add($command));
 
     \Pest\Laravel\artisan('ask:me --emotion')
         ->expectsQuestion('Please enter "band"', 'Swiss')
@@ -61,7 +59,7 @@ it('only asks for options if there is an required value', function () {
         }
     };
 
-    Artisan::starting(fn(Artisan $artisan) => $artisan->add($command));
+    Artisan::starting(fn (Artisan $artisan) => $artisan->add($command));
 
     \Pest\Laravel\artisan('ask:me')
         ->expectsOutput('Some Text')
@@ -86,12 +84,15 @@ it('can give choices if missing input', function () {
         }
     };
 
-    Artisan::starting(fn(Artisan $artisan) => $artisan->add($command));
+    Artisan::starting(fn (Artisan $artisan) => $artisan->add($command));
 
     \Pest\Laravel\artisan('validate --O')
-        ->expectsChoice('Please enter "A"', Enum::A->name, array_map(fn(object $enum) => $enum->name, Enum::cases()))
-        ->expectsChoice('Please enter "O"', StringEnum::A->value,
-            array_map(fn(object $enum) => $enum->value, StringEnum::cases()))
+        ->expectsChoice('Please enter "A"', Enum::A->name, array_map(fn (object $enum) => $enum->name, Enum::cases()))
+        ->expectsChoice(
+            'Please enter "O"',
+            StringEnum::A->value,
+            array_map(fn (object $enum) => $enum->value, StringEnum::cases())
+        )
         ->expectsOutput('A String A')
         ->assertSuccessful();
 });
@@ -118,7 +119,7 @@ it('can ask if validation fails', function () {
         }
     };
 
-    Artisan::starting(fn(Artisan $artisan) => $artisan->add($command));
+    Artisan::starting(fn (Artisan $artisan) => $artisan->add($command));
 
     \Pest\Laravel\artisan('validate LongerThan5 --shortOption=alsoLonger')
         ->expectsOutput('The short argument must not be greater than 5 characters.')
@@ -147,7 +148,7 @@ it('can disable auto ask on property level', function () {
         }
     };
 
-    Artisan::starting(fn(Artisan $artisan) => $artisan->add($command));
+    Artisan::starting(fn (Artisan $artisan) => $artisan->add($command));
 
     \Pest\Laravel\artisan('validate')
         ->assertSuccessful();
@@ -172,7 +173,7 @@ it('can not ask array types (yet)', function () {
         }
     };
 
-    Artisan::starting(fn(Artisan $artisan) => $artisan->add($command));
+    Artisan::starting(fn (Artisan $artisan) => $artisan->add($command));
 
     \Pest\Laravel\artisan('validate')
         ->expectsOutput(' nothing ')
