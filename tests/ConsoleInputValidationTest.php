@@ -5,11 +5,14 @@ use Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Option;
 use Thettler\LaravelCommandAttributeSyntax\Concerns\UsesAttributeSyntax;
 use Illuminate\Console\Application as Artisan;
+use Thettler\LaravelCommandAttributeSyntax\ConsoleToolkit;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\Enum;
 use Thettler\LaravelCommandAttributeSyntax\Tests\Fixtures\Enums\StringEnum;
 use Thettler\LaravelCommandAttributeSyntax\Transfers\Validation;
 
 it('can add validation to console inputs', function ()  {
+    ConsoleToolkit::enableAutoAsk(false);
+
     $command = new class () extends Command {
         use UsesAttributeSyntax;
 
@@ -41,7 +44,7 @@ it('can add validation to console inputs', function ()  {
 });
 
 it('can sets automatic enum rules', function ()  {
-    \Pest\Laravel\withExceptionHandling();
+    ConsoleToolkit::enableAutoAsk(false);
 
     $command = new class () extends Command {
         use UsesAttributeSyntax;
@@ -77,6 +80,7 @@ it('can sets automatic enum rules', function ()  {
 });
 
 it('can add custom validation messages', function ()  {
+    ConsoleToolkit::enableAutoAsk(false);
 
     $command = new class () extends Command {
         use UsesAttributeSyntax;

@@ -20,6 +20,7 @@ class Argument implements ConsoleInput
         protected ?string $as = null,
         protected null|string|Caster $cast = null,
         protected null|string|array|Validation $validation = null,
+        protected ?bool $autoAsk = null,
     ) {
     }
 
@@ -37,6 +38,12 @@ class Argument implements ConsoleInput
     {
         return $this->cast;
     }
+
+    public function hasAutoAsk(): ?bool
+    {
+        return $this->autoAsk;
+    }
+
 
     public function getValidation(): null|array|string|Validation
     {

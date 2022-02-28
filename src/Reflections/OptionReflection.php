@@ -45,6 +45,11 @@ class OptionReflection extends InputReflection
         return false;
     }
 
+    public function isAutoAskEnabled(): bool
+    {
+        return $this->hasRequiredValue() && parent::isAutoAskEnabled();
+    }
+
     public static function inputType(): ConsoleInputType
     {
         return ConsoleInputType::Option;

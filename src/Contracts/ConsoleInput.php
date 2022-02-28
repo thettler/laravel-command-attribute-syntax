@@ -13,4 +13,6 @@ interface ConsoleInput
     public function getCast(): null|Caster|string;
 
     public function getValidation(): null|array|string|Validation;
+
+    public function hasAutoAsk(): ?bool;
 }

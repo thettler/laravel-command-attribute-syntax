@@ -23,6 +23,7 @@ class Option implements ConsoleInput
         protected ?string $shortcut = null,
         protected bool $negatable = false,
         protected null|string|array|Validation $validation = null,
+        protected ?bool $autoAsk = null,
     ) {
     }
 
@@ -49,6 +50,11 @@ class Option implements ConsoleInput
     public function getCast(): null|Caster|string
     {
         return $this->cast;
+    }
+
+    public function hasAutoAsk(): ?bool
+    {
+        return $this->autoAsk;
     }
 
     public function getValidation(): null|array|string|Validation

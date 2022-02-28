@@ -3,15 +3,18 @@
 namespace Thettler\LaravelCommandAttributeSyntax\Concerns;
 
 use Illuminate\Support\Collection;
+use Illuminate\Validation\Validator;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Thettler\LaravelCommandAttributeSyntax\Enums\ConsoleInputType;
 use Thettler\LaravelCommandAttributeSyntax\Exceptions\ValidationException;
 use Thettler\LaravelCommandAttributeSyntax\Reflections\ArgumentReflection;
 use Thettler\LaravelCommandAttributeSyntax\Reflections\CommandReflection;
 use Thettler\LaravelCommandAttributeSyntax\Reflections\OptionReflection;
+use Thettler\LaravelCommandAttributeSyntax\Transfers\InputErrorData;
 
 trait UsesAttributeSyntax
 {
@@ -82,6 +85,7 @@ trait UsesAttributeSyntax
     {
         $hasErrors = !$this->errorHandling(fn() => $this->hydrateArguments());
         $hasErrors = !$this->errorHandling(fn() => $this->hydrateOptions()) || $hasErrors;
+
         if ($hasErrors) {
             return SymfonyCommand::FAILURE;
         }
@@ -95,25 +99,34 @@ trait UsesAttributeSyntax
             $callable();
             return true;
         } catch (ValidationException $validationException) {
-
+            $rerun = false;
             foreach ($validationException->validator->errors()->toArray() as $key => $errors) {
-                $this->line(" ");
+                $inputErrorData = $validationException->inputs[$key];
 
-                foreach ($errors as $error) {
-                    $this->error($error);
-                }
+                $this->renderDivider($inputErrorData);
+                $this->renderValidationErrors($inputErrorData, $errors);
 
+                if ($inputErrorData->hasAutoAsk) {
+                    $answer = !empty($inputErrorData->choices)
+                        ? $this->renderAutoAskChoice($inputErrorData)
+                        : $this->renderAutoAsk($inputErrorData);
 
-                if (!array_key_exists($key, $validationException->choices)){
+                    match ($inputErrorData->reflection::inputType()) {
+                        ConsoleInputType::Argument => $this->input->setArgument($key, $answer),
+                        ConsoleInputType::Option => $this->input->setOption($key, $answer),
+                    };
+
+                    $rerun = true;
                     continue;
                 }
 
-                $this->info("Possible values for: {$key}.");
-
-                foreach ($validationException->choices[$key] as $choice) {
-                    $this->warn("   - {$choice}");
+                if (!empty($inputErrorData->choices)) {
+                    $this->renderChoiceOptions($inputErrorData);
                 }
+            }
 
+            if ($rerun) {
+                return $this->errorHandling($callable);
             }
 
             return false;
@@ -124,7 +137,9 @@ trait UsesAttributeSyntax
     {
         $this->reflection
             ->getArguments()
-            ->pipeThrough(fn(Collection $collection) => $this->validate($collection))
+            ->pipeThrough(
+                fn(Collection $collection) => $this->validate($collection),
+            )
             ->each(function (ArgumentReflection $argumentReflection) {
                 $this->{$argumentReflection->getName()} = $argumentReflection->castTo(
                     $this->argument($argumentReflection->getAlias() ?? $argumentReflection->getName())
@@ -158,7 +173,7 @@ trait UsesAttributeSyntax
         return match (true) {
             $argument->isArray() && !$argument->isOptional() => $this->makeInputArgument(
                 $argument,
-                InputArgument::IS_ARRAY | InputArgument::REQUIRED
+                $argument->isAutoAskEnabled() ? InputArgument::IS_ARRAY | InputArgument::OPTIONAL : InputArgument::IS_ARRAY | InputArgument::REQUIRED
             ),
 
             $argument->isArray() => $this->makeInputArgument(
@@ -173,7 +188,8 @@ trait UsesAttributeSyntax
                 $argument->getDefaultValue()
             ),
 
-            default => $this->makeInputArgument($argument, InputArgument::REQUIRED),
+            default => $this->makeInputArgument($argument,
+                $argument->isAutoAskEnabled() ? InputArgument::OPTIONAL : InputArgument::REQUIRED),
         };
     }
 
@@ -186,9 +202,10 @@ trait UsesAttributeSyntax
                 $option->getDefaultValue()
             ),
 
-            $option->hasValue() && !$option->isOptional() => $this->makeInputOption(
+            $option->hasRequiredValue() => $this->makeInputOption(
                 $option,
-                InputOption::VALUE_REQUIRED
+                $option->isAutoAskEnabled() ? InputOption::VALUE_OPTIONAL : InputOption::VALUE_REQUIRED,
+                $option->isAutoAskEnabled() ? '$__not_provided__$' : null
             ),
 
             $option->hasValue() => $this->makeInputOption(
@@ -209,7 +226,7 @@ trait UsesAttributeSyntax
 
     protected function makeInputArgument(
         ArgumentReflection $argument,
-        int $mode,
+        ?int $mode,
         string|bool|int|float|array|null $default = null
     ): InputArgument {
         return new InputArgument(
@@ -222,7 +239,7 @@ trait UsesAttributeSyntax
 
     protected function makeInputOption(
         OptionReflection $option,
-        int $mode,
+        ?int $mode,
         string|bool|int|float|array|null $default = null
     ): InputOption {
         return new InputOption(
@@ -232,5 +249,43 @@ trait UsesAttributeSyntax
             $option->getDescription(),
             $default
         );
+    }
+
+    protected function renderChoiceOptions(InputErrorData $inputErrorData): void
+    {
+        $this->info("Possible values for: {$inputErrorData->key}.");
+
+        foreach ($inputErrorData->choices as $choice) {
+            $this->warn("   - {$choice}");
+        }
+    }
+
+    protected function renderAutoAsk(InputErrorData $inputErrorData): mixed
+    {
+        return $this->ask('Please enter "'.$inputErrorData->key.'"');
+    }
+
+
+    protected function renderAutoAskChoice(InputErrorData $inputErrorData): string|array
+    {
+        return $this->choice(
+            'Please enter "'.$inputErrorData->key.'"',
+            $inputErrorData->choices,
+            $inputErrorData->reflection->getDefaultValue(),
+            null,
+            $inputErrorData->reflection->isArray()
+        );
+    }
+
+    protected function renderValidationErrors(InputErrorData $inputErrorData, array $errors): void
+    {
+        foreach ($errors as $error) {
+            $this->error($error);
+        }
+    }
+
+    protected function renderDivider(InputErrorData $inputErrorData): void
+    {
+        $this->line(" ");
     }
 }

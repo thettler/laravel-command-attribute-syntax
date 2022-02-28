@@ -3,8 +3,11 @@
 use Illuminate\Console\Command;
 use Thettler\LaravelCommandAttributeSyntax\Attributes\Argument;
 use Thettler\LaravelCommandAttributeSyntax\Concerns\UsesAttributeSyntax;
+use Thettler\LaravelCommandAttributeSyntax\ConsoleToolkit;
 
 it('Arguments Will Be Registered With Attribute Syntax', function () {
+    ConsoleToolkit::enableAutoAsk(false);
+
     $command = new class () extends Command {
         use UsesAttributeSyntax;
 
@@ -43,6 +46,8 @@ it('Arguments Will Be Registered With Attribute Syntax', function () {
 });
 
 it('Array Arguments WillBe Registered With Attribute Syntax', function () {
+    ConsoleToolkit::enableAutoAsk(false);
+
     $commandRequired = new class () extends Command {
         use UsesAttributeSyntax;
 

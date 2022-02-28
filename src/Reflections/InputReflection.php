@@ -53,7 +53,7 @@ abstract class InputReflection
         return $this->consoleInput->getAlias();
     }
 
-    public function getValidationRules():  array|string
+    public function getValidationRules(): array
     {
         $autoRules = [];
 
@@ -77,11 +77,14 @@ abstract class InputReflection
 
     public function getChoices(): array
     {
-        if (enum_exists($this->type)) {
-            return array_map(fn(object $enum) => $enum?->value ?? $enum->name, $this->type::cases());
+        if (!enum_exists($this->type)) {
+            return [];
         }
 
-        return [];
+        return array_map(
+            fn(\UnitEnum|\BackedEnum $enum) => $enum instanceof \BackedEnum ? $enum->value : $enum->name,
+            $this->type::cases()
+        );
     }
 
     public function getDescription(): string
@@ -101,6 +104,15 @@ abstract class InputReflection
         return $this->property->hasDefaultValue()
             || $this->property->getType()?->allowsNull()
             || $this->property->isInitialized($this->command);
+    }
+
+    public function isAutoAskEnabled(): bool
+    {
+        if ($this->consoleInput->hasAutoAsk() !== null) {
+            return $this->consoleInput->hasAutoAsk();
+        }
+
+        return ConsoleToolkit::$hasAutoAskEnabled;
     }
 
     public function isArray(): bool

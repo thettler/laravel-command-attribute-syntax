@@ -15,6 +15,8 @@ class LaravelCommandAttributeSyntaxServiceProvider extends PackageServiceProvide
     {
         $package->name('laravel-command-attribute-syntax');
 
+        ConsoleToolkit::enableAutoAsk();
+
         ConsoleToolkit::addCast(
             EnumCaster::class,
             function (mixed $value, ReflectionProperty $property): bool {

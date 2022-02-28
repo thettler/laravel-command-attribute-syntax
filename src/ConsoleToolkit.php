@@ -13,6 +13,8 @@ class ConsoleToolkit
     /** @var array<CasterConfigKey, CasterConfigValue> */
     public static array $casts = [];
 
+    public static bool $hasAutoAskEnabled = false;
+
     /**
      * @param  CasterConfigKey  $caster
      * @param  CasterConfigValue $matches
@@ -30,5 +32,10 @@ class ConsoleToolkit
     public static function setCast(array $caster): void
     {
         static::$casts = $caster;
+    }
+
+    public static function enableAutoAsk(bool $enable = true): void
+    {
+        static::$hasAutoAskEnabled = $enable;
     }
 }

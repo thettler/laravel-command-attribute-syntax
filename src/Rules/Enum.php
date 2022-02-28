@@ -27,7 +27,7 @@ class Enum extends \Illuminate\Validation\Rules\Enum
                 return ! is_null($this->type::tryFrom($value));
             }
 
-            return !empty(array_filter($this->type::cases(), fn(object $enum) => $enum->name === $value));
+            return !empty(array_filter($this->type::cases(), fn(\UnitEnum $enum) => $enum->name === $value));
         } catch (TypeError $e) {
             return false;
         }

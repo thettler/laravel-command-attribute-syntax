@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Thettler\LaravelCommandAttributeSyntax\Enums\ConsoleInputType;
 use Thettler\LaravelCommandAttributeSyntax\Exceptions\ValidationException;
 use Thettler\LaravelCommandAttributeSyntax\Reflections\InputReflection;
+use Thettler\LaravelCommandAttributeSyntax\Transfers\InputErrorData;
 
 trait UsesInputValidation
 {
@@ -23,6 +24,7 @@ trait UsesInputValidation
             'messages' => $messages,
             'choices' => $choices
         ] = $this->extractValidationData($collection);
+
         if (empty($rules)) {
             return $collection;
         }
@@ -37,7 +39,16 @@ trait UsesInputValidation
             return $collection;
         }
 
-        throw new ValidationException($validator, $choices);
+        $inputErrors = $collection->mapWithKeys(fn(InputReflection $reflection) => [
+            $reflection->getName() => new InputErrorData(
+                key: $reflection->getName(),
+                choices: $choices[$reflection->getName()] ?? [],
+                reflection: $reflection,
+                hasAutoAsk: $this->hasAutoAskEnabled($reflection),
+            )
+        ])->all();
+
+        throw new ValidationException($validator, $inputErrors);
     }
 
 
@@ -87,11 +98,17 @@ trait UsesInputValidation
     protected function extractInputRules(
         InputReflection $reflection
     ): array {
-        if (empty($reflection->getValidationRules())) {
-            return [];
+        $rules = [];
+
+        if ($this->hasAutoAskEnabled($reflection) && !$reflection->isArray()) {
+            $rules[] = 'required';
         }
 
-        return [$reflection->getName() => $reflection->getValidationRules()];
+        if (empty($reflection->getValidationRules())) {
+            return empty($rules) ? [] : [$reflection->getName() => $rules];
+        }
+
+        return [$reflection->getName() => [...$rules, ...$reflection->getValidationRules()]];
     }
 
     protected function extractInputChoices(
@@ -102,5 +119,19 @@ trait UsesInputValidation
         }
 
         return [$reflection->getName() => $reflection->getChoices()];
+    }
+
+    /**
+     * @param  InputReflection  $reflection
+     * @return bool
+     */
+    protected function hasAutoAskEnabled(InputReflection $reflection): bool
+    {
+        return match ($reflection::inputType()) {
+            ConsoleInputType::Argument => $reflection->isAutoAskEnabled(),
+            ConsoleInputType::Option => $reflection->isAutoAskEnabled()
+                && $reflection->hasRequiredValue()
+                && $this->option($reflection->getName()) !== '$__not_provided__$',
+        };
     }
 }
