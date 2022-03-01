@@ -1,4 +1,4 @@
-❌❌THIS REPO IS NO LONGER SUPPORTED PLEASE USE https://github.com/thettler/laravel-console-toolkit❌❌
+❌❌THIS REPO IS NO LONGER SUPPORTED PLEASE USE https://github.com/thettler/laravel-console-toolkit ❌❌
 
 
 
