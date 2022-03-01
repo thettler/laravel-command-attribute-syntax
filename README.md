@@ -1,3 +1,8 @@
+❌❌THIS REPO IS NO LONGER SUPPORTED PLEASE USE https://github.com/thettler/laravel-console-toolkit❌❌
+
+
+
+
 # Laravel Command Attribute Syntax
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/thettler/laravel-command-attribute-syntax.svg?style=flat-square)](https://packagist.org/packages/thettler/laravel-command-attribute-syntax)
